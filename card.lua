@@ -4,6 +4,8 @@ local Card = {
 	number = 0
 }
 
+Card.card_colors = { "R", "B", "Y", "G", "K" }
+
 function Card:new(o)
 	o = o or {}
 	setmetatable(o, self)

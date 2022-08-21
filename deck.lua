@@ -50,17 +50,15 @@ function Deck.printDeck(deck)
 	end
 end
 
+---genereates deck with 108 uno cards
+---@return deck table
 function Deck.generateDeck()
 	local deck = {}
 
-	addColors(deck, 0, "R")
-	addColors(deck, 1, "R")
-	addColors(deck, 0, "B")
-	addColors(deck, 1, "B")
-	addColors(deck, 0, "Y")
-	addColors(deck, 1, "Y")
-	addColors(deck, 0, "G")
-	addColors(deck, 1, "G")
+	for i = 1, #Card.card_colors - 1 do
+		addColors(deck, 0, Card.card_colors[i])
+		addColors(deck, 1, Card.card_colors[i])
+	end
 	addBlack(deck)
 
 	Deck.shuffle(deck)

@@ -1,5 +1,11 @@
 Card = require("card")
 
+local Deck = {} -- namespace
+
+-------------------------------------------------------------------------------
+-- Private functions
+-------------------------------------------------------------------------------
+
 ---add cards with colors to deck
 ---@param deck table
 ---@param from_number integer 0 or 1
@@ -21,6 +27,7 @@ local function addColors(deck, from_number, color)
 	end
 end
 
+---Adds black cards to deck
 ---@param deck table
 local function addBlack(deck)
 	for _ = 1, 4 do
@@ -31,12 +38,8 @@ local function addBlack(deck)
 	end
 end
 
------------------------------------------------------------
-
-local Deck = {} -- namespace
-
 ---@param x table
-function Deck.shuffle(x)
+local function shuffle(x)
 	math.randomseed(os.time()) -- so that the results are always different
 	for i = #x, 2, -1 do
 		local j = math.random(i)
@@ -44,14 +47,20 @@ function Deck.shuffle(x)
 	end
 end
 
+-------------------------------------------------------------------------------
+-- Public functions
+-------------------------------------------------------------------------------
+
+---prints deck
+---@param deck table table with list of cards
 function Deck.printDeck(deck)
 	for i = 1, #deck do
 		deck[i]:print()
 	end
 end
 
----genereates deck with 108 uno cards
----@return deck table
+---genereates list of cards, deck with 108 uno cards
+---@return table deck deck with 108 uno cards
 function Deck.generateDeck()
 	local deck = {}
 
@@ -60,11 +69,8 @@ function Deck.generateDeck()
 		addColors(deck, 1, Card.card_colors[i])
 	end
 	addBlack(deck)
-
-	Deck.shuffle(deck)
+	shuffle(deck)
 	return deck
 end
 
 return Deck
-
-

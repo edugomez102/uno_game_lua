@@ -12,7 +12,7 @@ function Player:new(o)
 	return o
 end
 
----deal cards to player
+--- Deal cards to player
 ---@param deck table
 function Player:dealCards(deck)
 	-- TODO set to 7
@@ -21,9 +21,17 @@ function Player:dealCards(deck)
 	end
 end
 
+--- Insert card in cards from deck
+---@return table new_card new card reference
+function Player:takeCard(deck)
+	local new_card = table.remove(deck, 1)
+	table.insert(self.cards, new_card)
+	return new_card
+end
+
 ---@param select boolean true to show index of cards
 function Player:printCards(select)
-	print("Cards of " .. self.name)
+	print("Cards of " .. self.name .. ":")
 	for i = 1, #self.cards do
 		if select then
 			self.cards[i]:printToSelect(i)

@@ -1,6 +1,8 @@
 --- Player class
 ---
-function Player(p_name)
+
+Player = {}
+function Player.new(p_name)
 	-------------------------------------------------------------------------------
 	-- Public members
 	-------------------------------------------------------------------------------
@@ -52,9 +54,9 @@ function Player(p_name)
 		print("_cards of " .. self.name .. ":")
 		for i = 1, #_cards do
 			if select then
-				_cards[i]:printToSelect(i)
+				_cards[i].printToSelect(i)
 			else
-				_cards[i]:print()
+				_cards[i].print()
 			end
 		end
 	end

@@ -27,14 +27,14 @@ local function addColors(deck, from_number, color)
 	end
 end
 
----Adds black cards to deck
+--- Adds black cards to deck
 ---@param deck table
 local function addBlack(deck)
 	for _ = 1, 4 do
-		table.insert(deck, Card:new({number = "+4"}))
+		table.insert(deck, Card.new({number = "+4"}))
 	end
 	for _ = 1, 4 do
-		table.insert(deck, Card:new({number = "color change"}))
+		table.insert(deck, Card.new({number = "color change"}))
 	end
 end
 
@@ -51,7 +51,7 @@ end
 -- Public functions
 -------------------------------------------------------------------------------
 
----prints deck
+--- Prints deck
 ---@param deck table table with list of cards
 function Deck.printDeck(deck)
 	for i = 1, #deck do

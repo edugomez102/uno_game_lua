@@ -1,28 +1,33 @@
+Card = {}
 
-local Card = {
-	color = "K",
-	number = 0
-}
-
+-- static member
 Card.card_colors = { "R", "B", "Y", "G", "K" }
 
-function Card:new(o)
-	o = o or {}
-	setmetatable(o, self)
-	self.__index = self
-	return o
-end
+function Card.new(o)
+	-------------------------------------------------------------------------------
+	-- Public members
+	-------------------------------------------------------------------------------
+	local self = {
+		number = o.number or 0,
+		color  = o.color or "K"
+	}
 
-function Card:print()
-	print(self.color .. " - " .. self.number)
-end
+	-------------------------------------------------------------------------------
+	-- Public functions
+	-------------------------------------------------------------------------------
+	function self.print()
+		print(self.color .. " - " .. self.number)
+	end
 
--- function Card:__tostring()
--- 	return "Card:" .. self.color .. ", " .. self.number
--- end
+	function self.__tostring()
+		return "Card:" .. self.color .. ", " .. self.number
+	end
 
-function Card:printToSelect(index)
-	print("[".. index .."]: " .. self.color .. " - " .. self.number)
+	function self.printToSelect(index)
+		print("[".. index .."]: " .. self.color .. " - " .. self.number)
+	end
+
+	return self
 end
 
 return Card

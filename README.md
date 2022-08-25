@@ -4,19 +4,19 @@ first time using lua I'm using this aproacch to OOP:
 
 ```lua
 
-function Class()
+function Class(num)
   -- public memebrs
   local self = {
     public_member = 5
   }
 
   -- private memebrs
-  local private_member1 = 1
-  local private_member2 = 2
+  local _private_member1 = num or 1
+  local _private_member2 = 2
 
   -- private memebrs
   local function private_fun()
-    return private_member1 + private_member2
+    return _private_member1 + _private_member2
   end
 
   -- public function

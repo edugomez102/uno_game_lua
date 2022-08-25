@@ -29,6 +29,14 @@ function Player:takeCard(deck)
 	return new_card
 end
 
+function Player:removeCard(index)
+	table.remove(self.cards, index)
+end
+
+function Player:getCard(index)
+	return self.cards[index]
+end
+
 ---@param select boolean true to show index of cards
 function Player:printCards(select)
 	print("Cards of " .. self.name .. ":")

@@ -17,6 +17,10 @@ function Card:print()
 	print(self.color .. " - " .. self.number)
 end
 
+-- function Card:__tostring()
+-- 	return "Card:" .. self.color .. ", " .. self.number
+-- end
+
 function Card:printToSelect(index)
 	print("[".. index .."]: " .. self.color .. " - " .. self.number)
 end

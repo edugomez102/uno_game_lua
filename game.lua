@@ -1,3 +1,5 @@
+require("table_has")
+
 local Deck = require("deck")
 
 -------------------------------------------------------------------------------
@@ -30,13 +32,15 @@ function Game:new()
 	local _current_card = {}
 	local _played_cards = {}
 	local _turn = 1            -- index of player_lis
+	local _turn_dir = true     -- if false, player rotation is swapped
 	local _has_ended = false
 
 	-------------------------------------------------------------------------------
 	-- Private functions
 	-------------------------------------------------------------------------------
 
-	---checks if number in _current_card and card_to_play are the same
+	--- Checks if number in _current_card and card_to_play are the same
+	--- @param card_to_play table Card
 	local function checkNumber(card_to_play)
 		if _current_card.number == card_to_play.number or 
 			card_to_play.color == "any" then
@@ -46,7 +50,8 @@ function Game:new()
 		end
 	end
 
-	---checks if color in _current_card and card_to_play are the same
+	--- Checks if color in _current_card and card_to_play are the same
+	--- @param card_to_play table Card
 	local function checkColor(card_to_play)
 		if _current_card.color == card_to_play.color or
 		card_to_play.color == "K" then
@@ -56,7 +61,18 @@ function Game:new()
 		end
 	end
 
+
+	--- Checks if played card makes changes in the game
+	--- @param card table Card to check
+	local function checkActionCard(card)
+		if table.has_key(Card.action, card.number) then
+			print("ACTION CARD")
+		end
+	end
+
+
 	local function incrementTurn()
+		-- TODO check with _turn_dir
 		if _turn >= #_player_list then
 			_turn = 1
 		else
@@ -73,6 +89,7 @@ function Game:new()
 			table.insert(_played_cards, _current_card)
 			_current_card = card_to_play
 			_player_list[_turn].removeCard(play_move)
+			checkActionCard(_current_card)
 			print("---------------------")
 			incrementTurn()
 		else

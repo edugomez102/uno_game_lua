@@ -19,7 +19,7 @@ local function addColors(deck, from_number, color)
 		elseif i == 11 then
 			c.number = "reverse"
 		elseif i == 12 then
-			c.number = "+2"
+			c.number = "draw two"
 		else
 			c.number = i
 		end
@@ -31,10 +31,10 @@ end
 ---@param deck table
 local function addBlack(deck)
 	for _ = 1, 4 do
-		table.insert(deck, Card.new({number = "+4"}))
+		table.insert(deck, Card.new({number = "wild draw 4"}))
 	end
 	for _ = 1, 4 do
-		table.insert(deck, Card.new({number = "color change"}))
+		table.insert(deck, Card.new({number = "wild"}))
 	end
 end
 

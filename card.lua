@@ -30,4 +30,14 @@ function Card.new(o)
 	return self
 end
 
+Card.action = {
+	["skip"]        = function() end,
+	["reverse"]     = function() end,
+	["draw two"]    = function() end,
+	["wild draw 4"] = function() end,
+	["wild"]        = function() end
+}
+
+print(Card.action["draw two"]())
+
 return Card

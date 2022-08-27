@@ -1,7 +1,7 @@
 --- Player class
 ---
 
-Player = {}
+local Player = {}
 function Player.new(p_name)
 	-------------------------------------------------------------------------------
 	-- Public members

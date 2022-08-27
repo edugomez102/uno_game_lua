@@ -1,68 +1,144 @@
 local Deck = require("deck")
 
-local Game = {
-	player_list = {},
-	deck = Deck.generateDeck(),
-	played_cards = {},
-	has_ended = false
-}
+-------------------------------------------------------------------------------
+-- Private static functions
+-------------------------------------------------------------------------------
 
-function Game:new(o)
-	o = o or {}
-	setmetatable(o, self)
-	self.__index = self
-	return o
+---@return number a read number from keyboard
+local function readNumberInput()
+	local a
+	repeat
+		a = io.read()
+		a = tonumber(a)
+		if not a then
+			print("Incorrect Input!(Try using only numbers)")
+		end
+	until a
+	return a
 end
 
-function Game:addPlayer(p)
-	table.insert(self.player_list, p)
-end
+local Game = {}
 
----deal cards to all players and set initial card
-function Game:start()
-	-- print("--- Deck ---")
-	-- Deck.printDeck(game.deck)
+function Game:new()
+	self = {}
 
-	for i = 1, #self.player_list do
-		self.player_list[i]:dealCards(self.deck)
+	-------------------------------------------------------------------------------
+	-- Private members
+	-------------------------------------------------------------------------------
+	local _player_list = {}
+	local _deck = Deck.generateDeck()
+	local _current_card = {}
+	local _played_cards = {}
+	local _turn = 1            -- index of player_lis
+	local _has_ended = false
+
+	-------------------------------------------------------------------------------
+	-- Private functions
+	-------------------------------------------------------------------------------
+
+	---checks if number in _current_card and card_to_play are the same
+	local function checkNumber(card_to_play)
+		if _current_card.number == card_to_play.number or 
+			card_to_play.color == "any" then
+			return true
+		else
+			return false
+		end
 	end
-	table.insert(self.played_cards, 1, table.remove(self.deck, 1))
-end
 
-
---- TODO private ?
-local function playCard(current_card, card_to_play)
-	if current_card.color == card_to_play.color then
-		print("SAME COLOR")
-	else
-		print("NO COLOR")
+	---checks if color in _current_card and card_to_play are the same
+	local function checkColor(card_to_play)
+		if _current_card.color == card_to_play.color or
+		card_to_play.color == "K" then
+			return true
+		else
+			return false
+		end
 	end
 
-	if current_card.number == card_to_play.number then
-		print("SAME NUM")
-	else
-		print("NO NUM")
+	local function incrementTurn()
+		if _turn >= #_player_list then
+			_turn = 1
+		else
+			_turn = _turn + 1
+		end
 	end
-end
 
----main loop of the game
-function Game:play()
+	--- Checks if card can be playable and icrements player _turn if so
+	--- @param card_to_play table Card
+	--- @param play_move integer index of card in _player_list
+	local function playCard(card_to_play, play_move)
 
-	--index of player_list
-	local turn = 1
+		if checkNumber(card_to_play) or checkColor(card_to_play) then
+			table.insert(_played_cards, _current_card)
+			_current_card = card_to_play
+			_player_list[_turn].removeCard(play_move)
+			print("---------------------")
+			incrementTurn()
+		else
+			print("\27[1;31mCANT PLAY THAT CARD \27[0m")
+		end
+	end
 
-	print("Current card")
-	local current_card = self.played_cards[1]
-	current_card:print()
+	--- Prints cards of current player
+	local function showPlayableCards()
+		_player_list[_turn].printCards(true)
+		print("[0]: draw card")
+		print("---------------------")
+	end
 
-	self.player_list[turn]:printCards(true)
+	-------------------------------------------------------------------------------
+	-- Public functions
+	-------------------------------------------------------------------------------
 
-	local play_move = io.read("*number")
-	print("played card:")
-	local card_to_play = self.player_list[turn].cards[play_move]
-	card_to_play:print()
+	--- Adds player to _player_list
+	function self.addPlayer(p)
+		table.insert(_player_list, p)
+	end
 
-	playCard(current_card, card_to_play)
+	--- Deal cards to all players and sets _current_card
+	function self.start()
+		-- print("--- _deck ---")
+		-- _deck.printDeck(_deck)
+		-- print("Card number:" .. #_deck)
+
+		for i = 1, #_player_list do
+			_player_list[i].dealCards(_deck)
+		end
+		_current_card = table.remove(_deck, 1)
+	end
+
+	local function playerChangeColor()
+	end
+
+	--- Main loop of the game
+	function self.play()
+
+		io.write("Current card: ")
+		_current_card.print()
+
+		showPlayableCards()
+
+		local play_move = readNumberInput()
+
+		if play_move == 0 then
+			---TODO only once
+			_player_list[_turn].takeCard(_deck)
+		else
+			local card_to_play = _player_list[_turn].getCard(play_move)
+			io.write("played card: ")
+			card_to_play.print()
+
+			playCard(card_to_play, play_move)
+		end
+
+		-- print("------ Played cards")
+		-- for i = 1, #self._played_cards do
+		-- 	self._played_cards[i]:print()
+		-- end
+	end
+
+	return self
 end
 
 return Game

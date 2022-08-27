@@ -1,4 +1,4 @@
-Card = {}
+local Card = {}
 
 -- static member
 Card.card_colors = { "R", "B", "Y", "G", "K" }

@@ -14,7 +14,7 @@ local function readNumberInput(max_num)
 	repeat
 		a = io.read()
 		a = tonumber(a)
-		if a > max_num then a = nil end
+		if a ~= nil and a > max_num then a = nil end
 		if not a then
 			print("Incorrect Input!(Try using only numbers)")
 		end
@@ -34,8 +34,10 @@ function Game.new()
 	local _deck = Deck.generateDeck()
 	local _current_card = {}
 	local _played_cards = {}
-	local _turn = 1            -- index of player_lis
-	local _turn_dir = false     -- if false, player rotation is swapped
+	local _turn = {
+		index = 1,
+		dir   = true
+	}
 	local _has_ended = false
 
 	-------------------------------------------------------------------------------
@@ -69,22 +71,23 @@ function Game.new()
 	local function checkActionCard(card)
 		if table.has_key(Card.action, card.number) then
 			print("ACTION CARD")
+			Card.card_colors[card.number]()
 		end
 	end
 
-	--- Update _turn to the next playing player on the list
+	--- Update _turn.index to the next playing player on the list
 	local function incrementTurn()
-		if _turn_dir then
-			if _turn == #_player_list then
-				_turn = 1
+		if _turn.dir then
+			if _turn.index == #_player_list then
+				_turn.index = 1
 			else
-				_turn = _turn + 1
+				_turn.index = _turn.index + 1
 			end
 		else
-			if _turn == 1 then
-				_turn = #_player_list
+			if _turn.index == 1 then
+				_turn.index = #_player_list
 			else
-				_turn = _turn - 1
+				_turn.index = _turn.index - 1
 			end
 		end
 	end
@@ -103,7 +106,7 @@ function Game.new()
 		end
 	end
 
-	--- Checks if card can be playable and icrements player _turn if so
+	--- Checks if card can be playable and icrements player _turn.index if so
 	--- @param card_to_play table Card
 	--- @param play_move integer index of card in _player_list
 	local function playCard(card_to_play, play_move)
@@ -111,7 +114,7 @@ function Game.new()
 		if checkNumber(card_to_play) or checkColor(card_to_play) then
 			table.insert(_played_cards, _current_card)
 			_current_card = card_to_play
-			_player_list[_turn].removeCard(play_move)
+			_player_list[_turn.index].removeCard(play_move)
 			checkActionCard(_current_card)
 			print("---------------------")
 			incrementTurn()
@@ -122,13 +125,20 @@ function Game.new()
 
 	--- Prints cards of current player
 	local function showPlayableCards()
-		_player_list[_turn].printCards(true)
-		if not _player_list[_turn].has_drawn then
+		_player_list[_turn.index].printCards(true)
+		if not _player_list[_turn.index].has_drawn then
 			print("[0]: draw card")
 		else
 			print("[0]: pass")
 		end
 		print("---------------------")
+	end
+
+	--- Show available card colors
+	local function showColors()
+		for i = 1, 4 do
+			print("[" .. i .. "]: " .. Card.card_colors[i])
+		end
 	end
 
 	-------------------------------------------------------------------------------
@@ -161,7 +171,7 @@ function Game.new()
 		io.write("Current card: ")
 		_current_card.print()
 
-		local player = _player_list[_turn]
+		local player = _player_list[_turn.index]
 		showPlayableCards()
 
 		local play_move = readNumberInput(player.getCardNumber())

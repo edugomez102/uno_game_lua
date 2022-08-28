@@ -7,7 +7,9 @@ function Player.new(p_name)
 	-- Public members
 	-------------------------------------------------------------------------------
 	local self = {
-		name = p_name or "name"
+		name = p_name or "name",
+		-- if it has drawn in its turn
+		has_drawn = false
 	}
 
 	-------------------------------------------------------------------------------
@@ -44,9 +46,10 @@ function Player.new(p_name)
 
 	--- @param index integer index of cards
 	--- @return table Card object
-	function self.getCard(index)
-		return _cards[index]
-	end
+	function self.getCard(index) return _cards[index] end
+
+	---@return number of cards of player
+	function self.getCardNumber() return #_cards end
 
 	--- TODO use tostirng
 	--- @param select boolean true to show index of cards

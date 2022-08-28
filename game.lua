@@ -6,12 +6,15 @@ local Deck = require("deck")
 -- Private static functions
 -------------------------------------------------------------------------------
 
+--- Reads number input from keyboard
 ---@return number a read number from keyboard
-local function readNumberInput()
+---@param max_num integer maximun number to read
+local function readNumberInput(max_num)
 	local a
 	repeat
 		a = io.read()
 		a = tonumber(a)
+		if a > max_num then a = nil end
 		if not a then
 			print("Incorrect Input!(Try using only numbers)")
 		end
@@ -21,8 +24,8 @@ end
 
 local Game = {}
 
-function Game:new()
-	self = {}
+function Game.new()
+	local self = {}
 
 	-------------------------------------------------------------------------------
 	-- Private members
@@ -32,7 +35,7 @@ function Game:new()
 	local _current_card = {}
 	local _played_cards = {}
 	local _turn = 1            -- index of player_lis
-	local _turn_dir = true     -- if false, player rotation is swapped
+	local _turn_dir = false     -- if false, player rotation is swapped
 	local _has_ended = false
 
 	-------------------------------------------------------------------------------
@@ -61,7 +64,6 @@ function Game:new()
 		end
 	end
 
-
 	--- Checks if played card makes changes in the game
 	--- @param card table Card to check
 	local function checkActionCard(card)
@@ -70,13 +72,34 @@ function Game:new()
 		end
 	end
 
-
+	--- Update _turn to the next playing player on the list
 	local function incrementTurn()
-		-- TODO check with _turn_dir
-		if _turn >= #_player_list then
-			_turn = 1
+		if _turn_dir then
+			if _turn == #_player_list then
+				_turn = 1
+			else
+				_turn = _turn + 1
+			end
 		else
-			_turn = _turn + 1
+			if _turn == 1 then
+				_turn = #_player_list
+			else
+				_turn = _turn - 1
+			end
+		end
+	end
+
+	--- Take or pass card. if player has already taken a card
+	--- then pass
+	local function takeOrPass(player)
+		---TODO only once
+		if not player.has_drawn then
+			player.takeCard(_deck)
+			player.has_drawn = true
+		else
+			-- set has_drawn false for next turn
+			player.has_drawn = false
+			incrementTurn()
 		end
 	end
 
@@ -100,7 +123,11 @@ function Game:new()
 	--- Prints cards of current player
 	local function showPlayableCards()
 		_player_list[_turn].printCards(true)
-		print("[0]: draw card")
+		if not _player_list[_turn].has_drawn then
+			print("[0]: draw card")
+		else
+			print("[0]: pass")
+		end
 		print("---------------------")
 	end
 
@@ -134,15 +161,15 @@ function Game:new()
 		io.write("Current card: ")
 		_current_card.print()
 
+		local player = _player_list[_turn]
 		showPlayableCards()
 
-		local play_move = readNumberInput()
+		local play_move = readNumberInput(player.getCardNumber())
 
 		if play_move == 0 then
-			---TODO only once
-			_player_list[_turn].takeCard(_deck)
+			takeOrPass(player)
 		else
-			local card_to_play = _player_list[_turn].getCard(play_move)
+			local card_to_play = player.getCard(play_move)
 			io.write("played card: ")
 			card_to_play.print()
 

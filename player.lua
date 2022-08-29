@@ -2,12 +2,15 @@
 ---
 
 local Player = {}
-function Player.new(p_name)
+function Player.new(o)
 	-------------------------------------------------------------------------------
 	-- Public members
 	-------------------------------------------------------------------------------
 	local self = {
-		name = p_name or "name",
+		name = o.name or "name",
+		human = o.human or true,
+
+		-- TODO private ??
 		-- if it has drawn in its turn
 		has_drawn = false
 	}

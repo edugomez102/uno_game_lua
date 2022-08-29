@@ -1,24 +1,20 @@
 local Game = require("game")
 local Player = require("player")
 
-local p1 = Player.new("p1")
-local p2 = Player.new("p2")
-local p3 = Player.new("p3")
-local p4 = Player.new("p4")
+local players = {
+	Player.new({name = "P1", human = true}),
+	Player.new({name = "P2", human = true}),
+	Player.new({name = "P3", human = true}),
+	Player.new({name = "P4", human = true}),
+}
 
-local game = Game:new()
+local game = Game.new()
 
-game.addPlayer(p1)
-game.addPlayer(p2)
-game.addPlayer(p3)
-game.addPlayer(p4)
+for i = 1, #players do
+	game.addPlayer(players[i])
+end
 
 game.start()
-
--- print(tostring(p1:getCard(1)))
--- p1:printCards()
--- p2:printCards()
--- p3:printCards()
 
 while not game.has_ended do
 	game.play()

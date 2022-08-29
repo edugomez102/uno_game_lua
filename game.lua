@@ -190,6 +190,16 @@ function Game.new()
 		print("---------------------")
 	end
 
+	---TODO apply action card rules when firsr card is an action card
+	---Sets initial card from deck. Cant be an action card
+	local function setInitialCard()
+		_current_card = table.remove(_deck, 1)
+		while table.has_key(_action_cards, _current_card.number) do
+			table.insert(_deck, _current_card)
+			_current_card = table.remove(_deck, 1)
+		end
+	end
+
 	-------------------------------------------------------------------------------
 	-- Public functions
 	-------------------------------------------------------------------------------
@@ -201,21 +211,19 @@ function Game.new()
 
 	--- Deal cards to all players and sets initial card on _current_card
 	function self.start()
-		-- print("--- _deck ---")
-		-- _deck.printDeck(_deck)
-		-- print("Card number:" .. #_deck)
-
 		for i = 1, #_player_list do
 			_player_list[i].dealCards(_deck)
 		end
-		--- TODO check action card
-		_current_card = table.remove(_deck, 1)
+		setInitialCard()
+		-- print("--- _deck ---")
+		-- Deck.printDeck(_deck)
+		-- print("Card number:" .. #_deck)
 	end
 
 	--- Main loop of the game
 	function self.play()
 
-		io.write("Current card: ")
+		io.write("Current card: \n=> ")
 		_current_card.print()
 
 		local player = _player_list[_turn.index]

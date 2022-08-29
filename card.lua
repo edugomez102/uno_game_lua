@@ -3,6 +3,13 @@ local Card = {}
 -- static member
 Card.card_colors = { "R", "B", "Y", "G", "K" }
 
+--- Show available card colors
+function Card.showColors()
+	for i = 1, 4 do
+		print("[" .. i .. "]: " .. Card.card_colors[i])
+	end
+end
+
 function Card.new(o)
 	-------------------------------------------------------------------------------
 	-- Public members
@@ -29,15 +36,5 @@ function Card.new(o)
 
 	return self
 end
-
-Card.action = {
-	["skip"]        = function() end,
-	["reverse"]     = function() end,
-	["draw two"]    = function() end,
-	["wild draw 4"] = function() end,
-	["wild"]        = function() end
-}
-
-print(Card.action["draw two"]())
 
 return Card

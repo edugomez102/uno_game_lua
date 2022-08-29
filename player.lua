@@ -48,13 +48,16 @@ function Player.new(p_name)
 	--- @return table Card object
 	function self.getCard(index) return _cards[index] end
 
+	-- TODO Delete
+	-- function self.setCard(card) table.insert(_cards, card) end
+
 	---@return number of cards of player
 	function self.getCardNumber() return #_cards end
 
 	--- TODO use tostirng
 	--- @param select boolean true to show index of cards
 	function self.printCards(select)
-		print("_cards of " .. self.name .. ":")
+		print("== Cards of " .. self.name .. " ==")
 		for i = 1, #_cards do
 			if select then
 				_cards[i].printToSelect(i)

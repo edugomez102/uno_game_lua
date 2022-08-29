@@ -20,7 +20,7 @@ game.start()
 -- p2:printCards()
 -- p3:printCards()
 
-while true do
+while not game.has_ended do
 	game.play()
 end
 

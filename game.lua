@@ -25,7 +25,9 @@ end
 local Game = {}
 
 function Game.new()
-	local self = {}
+	local self = {
+		has_ended = false
+	}
 
 	-------------------------------------------------------------------------------
 	-- Private members
@@ -38,7 +40,6 @@ function Game.new()
 		index = 1,
 		dir   = true
 	}
-	local _has_ended = false
 
 	-------------------------------------------------------------------------------
 	-- Private functions
@@ -136,18 +137,28 @@ function Game.new()
 		end
 	end
 
+	---Checks if player has no cards so it has won the game
+	---@return boolean true if the game ends
+	local function checkLastCard()
+		local player = _player_list[_turn.index]
+		if player.getCardNumber() == 0 then
+			self.has_ended = true
+			print(player.name .. " HAS WON THE GAME")
+		end
+		return true
+	end
+
 	--- Take or pass card. if player has already taken a card
 	--- then pass
 	local function takeOrPass(player)
-		---TODO only once
 		if not player.has_drawn then
 			player.takeCard(_deck)
 			player.has_drawn = true
 		else
+			print(_player_list[_turn.index].name .. " has passed its turn")
 			incrementTurn()
 		end
 	end
-
 
 	--- Checks if card can be playable and icrements player _turn.index if so
 	--- @param card_to_play table Card
@@ -159,6 +170,7 @@ function Game.new()
 			end
 			_current_card = card_to_play
 			_player_list[_turn.index].removeCard(play_move)
+			if checkLastCard() then return end
 			checkActionCard(_current_card)
 			print("---------------------")
 			incrementTurn()
@@ -187,7 +199,7 @@ function Game.new()
 		table.insert(_player_list, p)
 	end
 
-	--- Deal cards to all players and sets _current_card
+	--- Deal cards to all players and sets initial card on _current_card
 	function self.start()
 		-- print("--- _deck ---")
 		-- _deck.printDeck(_deck)
@@ -196,9 +208,8 @@ function Game.new()
 		for i = 1, #_player_list do
 			_player_list[i].dealCards(_deck)
 		end
-		-- _current_card = table.remove(_deck, 1)
-		-- _current_carw = Card.new({number = "1", color = "R"})
-		_current_card = Card.new({number = "reverse", color = "R"})
+		--- TODO check action card
+		_current_card = table.remove(_deck, 1)
 	end
 
 	--- Main loop of the game

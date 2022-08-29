@@ -54,6 +54,7 @@ function Game.new()
 
 	---Let player choose next color to play
 	local function changeNextCardColor()
+		print("Select a card color")
 		Card.showColors()
 		local option = input.readNumber(4)
 		_current_card = Card.new({number = "any", color = Card.card_colors[option]})
@@ -125,8 +126,10 @@ function Game.new()
 		if player.getCardNumber() == 0 then
 			self.has_ended = true
 			print(player.name .. " HAS WON THE GAME")
+			return true
+		else
+			return false
 		end
-		return true
 	end
 
 	--- Take or pass card. if player has already taken a card
@@ -151,13 +154,13 @@ function Game.new()
 			end
 			_current_card = card_to_play
 			_player_list[_turn.index].removeCard(play_move)
-			if checkLastCard() then return end
 			checkActionCard(_current_card)
-			print("---------------------")
+			if checkLastCard() then return end
 			incrementTurn()
 		else
 			print("\27[1;31mCANT PLAY THAT CARD \27[0m")
 		end
+		print("---------------------")
 	end
 
 	--- Prints cards of current player
@@ -210,6 +213,7 @@ function Game.new()
 		local player = _player_list[_turn.index]
 		showPlayableCards()
 
+		-- (a and "blah" or "nahblah")
 		local play_move = input.readNumber(player.getCardNumber())
 
 		if play_move == 0 then

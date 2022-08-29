@@ -1,26 +1,7 @@
 require("table_has")
 
 local Deck = require("deck")
-
--------------------------------------------------------------------------------
--- Private static functions
--------------------------------------------------------------------------------
-
---- Reads number input from keyboard
----@return number a read number from keyboard
----@param max_num integer maximun number to read
-local function readNumberInput(max_num)
-	local a
-	repeat
-		a = io.read()
-		a = tonumber(a)
-		if a ~= nil and a > max_num then a = nil end
-		if not a then
-			print("Incorrect Input!(Try using only numbers)")
-		end
-	until a
-	return a
-end
+local input = require("input")
 
 local Game = {}
 
@@ -74,7 +55,7 @@ function Game.new()
 	---Let player choose next color to play
 	local function changeNextCardColor()
 		Card.showColors()
-		local option = readNumberInput(4)
+		local option = input.readNumber(4)
 		_current_card = Card.new({number = "any", color = Card.card_colors[option]})
 
 	end
@@ -229,7 +210,7 @@ function Game.new()
 		local player = _player_list[_turn.index]
 		showPlayableCards()
 
-		local play_move = readNumberInput(player.getCardNumber())
+		local play_move = input.readNumber(player.getCardNumber())
 
 		if play_move == 0 then
 			takeOrPass(player)

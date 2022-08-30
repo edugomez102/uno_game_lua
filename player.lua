@@ -1,6 +1,8 @@
+local Input = require("input")
+local AI = require("ai")
+
 --- Player class
 ---
-
 local Player = {}
 function Player.new(o)
 	-------------------------------------------------------------------------------
@@ -8,7 +10,7 @@ function Player.new(o)
 	-------------------------------------------------------------------------------
 	local self = {
 		name = o.name or "name",
-		human = o.human or true,
+		human = (o.human == nil or o.human == true or false), -- default true
 
 		-- TODO private ??
 		-- if it has drawn in its turn
@@ -52,10 +54,26 @@ function Player.new(o)
 	function self.getCard(index) return _cards[index] end
 
 	-- TODO Delete
-	-- function self.setCard(card) table.insert(_cards, card) end
+	function self.setCard(card) table.insert(_cards, card) end
 
 	---@return number of cards of player
 	function self.getCardNumber() return #_cards end
+
+	---@param current_card table Card
+	---@return integer index of chosen card
+	function self.chooseCard(current_card)
+		-- AI.getPlayableCards(_cards, current_card)
+		if self.human then
+			return Input.readNumber(#_cards)
+		end
+	end
+
+	---@return number index of chosen card
+	function self.chooseColor()
+		if self.human then
+			return Input.readNumber(4)
+		end
+	end
 
 	--- TODO use tostirng
 	--- @param select boolean true to show index of cards

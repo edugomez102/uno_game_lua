@@ -1,9 +1,9 @@
 
-local input = {}
+local Input = {}
 --- Reads number input from keyboard
 ---@return number a read number from keyboard
 ---@param max_num integer maximun number to read
-function input.readNumber(max_num)
+function Input.readNumber(max_num)
 	local a
 	repeat
 		a = io.read()
@@ -16,4 +16,4 @@ function input.readNumber(max_num)
 	return a
 end
 
-return input
+return Input

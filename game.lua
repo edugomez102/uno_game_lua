@@ -1,7 +1,7 @@
 require("table_has")
 
 local Deck = require("deck")
-local input = require("input")
+local Rules = require("rules")
 
 local Game = {}
 
@@ -54,10 +54,12 @@ function Game.new()
 
 	---Let player choose next color to play
 	local function changeNextCardColor()
+		local player = _player_list[_turn.index]
 		print("Select a card color")
 		Card.showColors()
-		local option = input.readNumber(4)
+		local option = player.chooseColor()
 		_current_card = Card.new({number = "any", color = Card.card_colors[option]})
+		print(player.name .. " changed color to " .. Card.card_colors[option])
 
 	end
 
@@ -87,28 +89,6 @@ function Game.new()
 		end,
 		["wild"] = changeNextCardColor
 	}
-
-	--- Checks if number in _current_card and card_to_play are the same
-	--- @param card_to_play table Card
-	local function checkNumber(card_to_play)
-		if _current_card.number == card_to_play.number or
-			card_to_play.number == "any" then
-			return true
-		else
-			return false
-		end
-	end
-
-	--- Checks if color in _current_card and card_to_play are the same
-	--- @param card_to_play table Card
-	local function checkColor(card_to_play)
-		if _current_card.color == card_to_play.color or
-		card_to_play.color == "K" then
-			return true
-		else
-			return false
-		end
-	end
 
 	--- Checks if played card makes changes in the game
 	--- @param card table Card to check
@@ -148,7 +128,8 @@ function Game.new()
 	--- @param card_to_play table Card
 	--- @param play_move integer index of card in _player_list
 	local function playCard(card_to_play, play_move)
-		if checkNumber(card_to_play) or checkColor(card_to_play) then
+		if Rules.checkNumber(card_to_play, _current_card) or
+		   Rules.checkColor(card_to_play, _current_card) then
 			if _current_card.number ~= "any" then
 				table.insert(_played_cards, _current_card)
 			end
@@ -214,7 +195,8 @@ function Game.new()
 		showPlayableCards()
 
 		-- (a and "blah" or "nahblah")
-		local play_move = input.readNumber(player.getCardNumber())
+		-- player.chooseCard()
+		local play_move = player.chooseCard()
 
 		if play_move == 0 then
 			takeOrPass(player)

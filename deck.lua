@@ -6,7 +6,7 @@ local Deck = {} -- namespace
 -- Private functions
 -------------------------------------------------------------------------------
 
----add cards with colors to deck
+---Add cards with colors to deck
 ---@param deck table
 ---@param from_number integer 0 or 1
 ---@param color string with color name
@@ -27,7 +27,7 @@ local function addColors(deck, from_number, color)
 	end
 end
 
---- Adds black cards to deck
+---Adds black cards to deck
 ---@param deck table
 local function addBlack(deck)
 	for _ = 1, 4 do
@@ -37,11 +37,12 @@ local function addBlack(deck)
 		table.insert(deck, Card.new({number = "wild"}))
 	end
 end
+
 -------------------------------------------------------------------------------
 -- Public functions
 -------------------------------------------------------------------------------
 
---- Prints deck
+---Prints deck
 ---@param deck table table with list of cards
 function Deck.printDeck(deck)
 	for i = 1, #deck do
@@ -49,7 +50,7 @@ function Deck.printDeck(deck)
 	end
 end
 
----genereates list of cards, deck with 108 uno cards
+---Genereates list of cards, deck with 108 uno cards
 ---@return table deck deck with 108 uno cards
 function Deck.generateDeck()
 	local deck = {}

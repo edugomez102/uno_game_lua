@@ -1,6 +1,6 @@
-
 local Input = {}
---- Reads number input from keyboard
+
+---Reads number input from keyboard
 ---@return number a read number from keyboard
 ---@param max_num integer maximun number to read
 function Input.readNumber(max_num)

@@ -1,4 +1,4 @@
-local Game = require("game")
+local Game   = require("game")
 local Player = require("player")
 require("table_")
 
@@ -17,7 +17,7 @@ end
 
 game.start()
 
-while not game.has_ended do
+while not game.hasEnded() do
 	game.play()
 end
 

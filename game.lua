@@ -2,12 +2,13 @@ local Deck  = require("deck")
 local Card  = require("card")
 local Rules = require("rules")
 
+---
+---@class Game
+---
 local Game = {}
 
 function Game.new()
-	local self = {
-		has_ended = false
-	}
+	local self = {}
 
 	-------------------------------------------------------------------------------
 	-- Private members
@@ -16,6 +17,7 @@ function Game.new()
 	local _deck = Deck.generateDeck()
 	local _current_card = {}
 	local _played_pile = {}
+	local _has_ended = false
 	local _turn = {
 		index = 1,
 		dir   = true
@@ -25,8 +27,8 @@ function Game.new()
 	-- Private functions
 	-------------------------------------------------------------------------------
 
-	--- Get index of next player
-	--- @param turn_index integer curent turn index
+	---Get index of next player
+	---@param turn_index integer curent turn index
 	local function getNextTurn(turn_index)
 		if _turn.dir then
 			if turn_index == #_player_list then
@@ -44,7 +46,7 @@ function Game.new()
 		return turn_index
 	end
 
-	--- Update _turn.index to the next playing player on the list
+	---Update _turn.index to the next playing player on the list
 	local function incrementTurn()
 		_turn.index = getNextTurn(_turn.index)
 		-- set has_drawn false for next turn player
@@ -62,7 +64,7 @@ function Game.new()
 
 	end
 
-	--- Action cards behaviour
+	---Action cards behaviour
 	local _action_cards = {
 		["skip"] = incrementTurn,
 		["reverse"] =
@@ -70,7 +72,7 @@ function Game.new()
 			_turn.dir = not _turn.dir
 		end,
 		["draw two"] =
-		---  Makes the next player draw two cards
+		---Makes the next player draw two cards
 		function()
 			local next_player = _player_list[getNextTurn(_turn.index)]
 			next_player.takeCard(_deck)
@@ -89,8 +91,8 @@ function Game.new()
 		["wild"] = changeNextCardColor
 	}
 
-	--- Checks if played card makes changes in the game
-	--- @param card table Card to check
+	---Checks if played card makes changes in the game
+	---@param card table Card to check
 	local function checkActionCard(card)
 		if table.has_key(_action_cards, card.number) then
 			print("ACTION CARD")
@@ -103,7 +105,7 @@ function Game.new()
 	local function checkLastCard()
 		local player = _player_list[_turn.index]
 		if player.getCardNumber() == 0 then
-			self.has_ended = true
+			_has_ended = true
 			print(player.name .. " HAS WON THE GAME")
 			return true
 		else
@@ -119,8 +121,8 @@ function Game.new()
 		end
 	end
 
-	--- Take or pass card. if player has already taken a card
-	--- then pass
+	---Take or pass card. if player has already taken a card
+	---then pass
 	local function takeOrPass(player)
 		if not player.has_drawn then
 			player.takeCard(_deck)
@@ -131,9 +133,9 @@ function Game.new()
 		end
 	end
 
-	--- Checks if card can be playable and icrements player _turn.index if so
-	--- @param card_to_play table Card
-	--- @param play_move integer index of card in _player_list
+	---Checks if card can be playable and icrements player _turn.index if so
+	---@param card_to_play table Card
+	---@param play_move integer index of card in _player_list
 	local function playCard(card_to_play, play_move)
 		if Rules.checkNumber(card_to_play, _current_card) or
 		   Rules.checkColor(card_to_play, _current_card) then
@@ -152,7 +154,7 @@ function Game.new()
 		print("---------------------")
 	end
 
-	--- Prints cards of current player
+	---Prints cards of current player
 	local function showPlayableCards()
 		_player_list[_turn.index].printCards(true)
 		if not _player_list[_turn.index].has_drawn then
@@ -177,12 +179,15 @@ function Game.new()
 	-- Public functions
 	-------------------------------------------------------------------------------
 
-	--- Adds player to _player_list
+	---Adds player to _player_list
 	function self.addPlayer(p)
 		table.insert(_player_list, p)
 	end
 
-	--- Deal cards to all players and sets initial card on _current_card
+	---True if game has ended
+	function self.hasEnded() return _has_ended end
+
+	---Deal cards to all players and sets initial card on _current_card
 	function self.start()
 		for i = 1, #_player_list do
 			_player_list[i].dealCards(_deck)
@@ -193,7 +198,7 @@ function Game.new()
 		-- print("Card number:" .. #_deck)
 	end
 
-	--- Main loop of the game
+	---Main loop of the game
 	function self.play()
 
 		io.write("Current card: \n=> ")

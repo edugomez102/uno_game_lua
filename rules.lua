@@ -1,8 +1,8 @@
 local Rules = {}
 
---- Checks if number in _current_card and card_to_play are the same
---- @param card_to_play table Card
---- @param current_card table Card
+---Checks if number in _current_card and card_to_play are the same
+---@param card_to_play table Card
+---@param current_card table Card
 function Rules.checkNumber(card_to_play, current_card)
 	if current_card.number == card_to_play.number or
 		card_to_play.number == "any" then
@@ -12,9 +12,9 @@ function Rules.checkNumber(card_to_play, current_card)
 	end
 end
 
---- Checks if color in _current_card and card_to_play are the same
---- @param card_to_play table Card
---- @param current_card table Card
+---Checks if color in _current_card and card_to_play are the same
+---@param card_to_play table Card
+---@param current_card table Card
 function Rules.checkColor(card_to_play, current_card)
 	if current_card.color == card_to_play.color or
 	card_to_play.color == "K" then

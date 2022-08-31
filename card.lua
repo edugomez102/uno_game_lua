@@ -1,9 +1,12 @@
+---
+---@class Card
+---
+
 local Card = {}
 
--- static member
 Card.card_colors = { "R", "B", "Y", "G", "K" }
 
---- Show available card colors
+---Show available card colors
 function Card.showColors()
 	for i = 1, 4 do
 		print("[" .. i .. "]: " .. Card.card_colors[i])

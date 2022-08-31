@@ -1,9 +1,9 @@
 
 --- Checks if table contains given key
---- @param table table to ce
+--- @param t table to ce
 --- @param element any to check
-function table.has_key(table, element)
-	for k in pairs(table) do
+function table.has_key(t, element)
+	for k in pairs(t) do
 		if k == element then
 			return true
 		end
@@ -12,10 +12,10 @@ function table.has_key(table, element)
 end
 
 --- Checks if table contains given value
---- @param table table to ce
+--- @param t table to ce
 --- @param element any to check
-function table.has_value(table, element)
-	for _, v in pairs(table) do
+function table.has_value(t, element)
+	for _, v in pairs(t) do
 		if v == element then
 			return true
 		end
@@ -23,12 +23,20 @@ function table.has_value(table, element)
 	return false
 end
 
+--- Check if table is empty
+--- @param t table to check
+function table.empty(t)
+	if next(table) == nil then return true
+	else return false
+	end
+end
+
 ---Shuffles table content
----@param x table
-function table.shuffle(x)
+---@param t table to shuffle
+function table.shuffle(t)
 	math.randomseed(os.time()) -- so that the results are always different
-	for i = #x, 2, -1 do
+	for i = #t, 2, -1 do
 		local j = math.random(i)
-		x[i], x[j] = x[j], x[i]
+		t[i], t[j] = t[j], t[i]
 	end
 end

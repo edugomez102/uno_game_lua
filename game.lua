@@ -1,6 +1,5 @@
-require("table_has")
-
-local Deck = require("deck")
+local Deck  = require("deck")
+local Card  = require("card")
 local Rules = require("rules")
 
 local Game = {}
@@ -16,7 +15,7 @@ function Game.new()
 	local _player_list = {}
 	local _deck = Deck.generateDeck()
 	local _current_card = {}
-	local _played_cards = {}
+	local _played_pile = {}
 	local _turn = {
 		index = 1,
 		dir   = true
@@ -112,6 +111,14 @@ function Game.new()
 		end
 	end
 
+	---Shuffle _played_pile and insert cards in empty deck
+	local function refillDeck()
+		table.shuffle(_played_pile)
+		for i = 1, #_played_pile do
+			table.insert(_deck, table.remove(_played_pile, 1))
+		end
+	end
+
 	--- Take or pass card. if player has already taken a card
 	--- then pass
 	local function takeOrPass(player)
@@ -131,11 +138,12 @@ function Game.new()
 		if Rules.checkNumber(card_to_play, _current_card) or
 		   Rules.checkColor(card_to_play, _current_card) then
 			if _current_card.number ~= "any" then
-				table.insert(_played_cards, _current_card)
+				table.insert(_played_pile, _current_card)
 			end
 			_current_card = card_to_play
 			_player_list[_turn.index].removeCard(play_move)
 			checkActionCard(_current_card)
+			-- TODO move to Game.play ?
 			if checkLastCard() then return end
 			incrementTurn()
 		else
@@ -194,9 +202,7 @@ function Game.new()
 		local player = _player_list[_turn.index]
 		showPlayableCards()
 
-		-- (a and "blah" or "nahblah")
-		-- player.chooseCard()
-		local play_move = player.chooseCard()
+		local play_move = player.chooseCard(_current_card)
 
 		if play_move == 0 then
 			takeOrPass(player)
@@ -208,9 +214,14 @@ function Game.new()
 			playCard(card_to_play, play_move)
 		end
 
+		if table.empty(_deck) then
+			print("DECK IS EMPTY")
+			refillDeck()
+		end
+
 		-- print("------ Played cards")
-		-- for i = 1, #_played_cards do
-		-- 	_played_cards[i]:print()
+		-- for i = 1, #_played_pile do
+		-- 	_played_pile[i]:print()
 		-- end
 	end
 

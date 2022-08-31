@@ -22,3 +22,13 @@ function table.has_value(table, element)
 	end
 	return false
 end
+
+---Shuffles table content
+---@param x table
+function table.shuffle(x)
+	math.randomseed(os.time()) -- so that the results are always different
+	for i = #x, 2, -1 do
+		local j = math.random(i)
+		x[i], x[j] = x[j], x[i]
+	end
+end

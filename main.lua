@@ -1,11 +1,12 @@
 local Game = require("game")
 local Player = require("player")
+require("table_")
 
 local players = {
 	Player.new({name = "P1", human = true}),
-	Player.new({name = "P2", human = true}),
-	Player.new({name = "P3", human = true}),
-	Player.new({name = "P4", human = true}),
+	Player.new({name = "P2", }),
+	-- Player.new({name = "P3", human = true}),
+	-- Player.new({name = "P4", human = true}),
 }
 
 local game = Game.new()

@@ -1,4 +1,4 @@
-Card = require("card")
+local Card = require("card")
 
 local Deck = {} -- namespace
 
@@ -37,16 +37,6 @@ local function addBlack(deck)
 		table.insert(deck, Card.new({number = "wild"}))
 	end
 end
-
----@param x table
-local function shuffle(x)
-	math.randomseed(os.time()) -- so that the results are always different
-	for i = #x, 2, -1 do
-		local j = math.random(i)
-		x[i], x[j] = x[j], x[i]
-	end
-end
-
 -------------------------------------------------------------------------------
 -- Public functions
 -------------------------------------------------------------------------------
@@ -69,7 +59,7 @@ function Deck.generateDeck()
 		addColors(deck, 1, Card.card_colors[i])
 	end
 	addBlack(deck)
-	shuffle(deck)
+	table.shuffle(deck)
 	return deck
 end
 

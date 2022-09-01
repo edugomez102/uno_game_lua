@@ -29,7 +29,7 @@ end
 ---Check if table is empty
 ---@param t table to check
 function table.empty(t)
-	if next(table) == nil then return true
+	if next(t) == nil then return true
 	else return false
 	end
 end

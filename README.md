@@ -1,6 +1,24 @@
 # UNO card game in lua
 
-first time using lua I'm using this aproacch to OOP:
+## Differences with real game
+
+* Can't say UNO when a player has one card left
+* Action cards can't appear as first card
+
+## Quick Guide
+
+1. go to `main.lua` and change human to false if you want it to be AI controlled
+2. run `lua main.lua`
+
+```lua
+local players = {
+  Player.new({name = "Kevin", human = true}),
+  Player.new({name = "John",  human = false}),
+  Player.new({name = "Pablo", human = false}),
+}
+```
+
+## first time using lua I'm using this aproacch to OOP
 
 ```lua
 

@@ -56,9 +56,11 @@ function Game.new()
 	---Let player choose next color to play
 	local function changeNextCardColor()
 		local player = _player_list[_turn.index]
-		print("Select a card color")
-		Card.showColors()
-		local option = player.chooseColor()
+		if player.isHuman() then
+			print("Select a card color")
+			Card.showColors()
+		end
+		local option = player.chooseColor(_current_card)
 		_current_card = Card.new({number = "any", color = Card.card_colors[option]})
 		print(player.name .. " changed color to " .. Card.card_colors[option])
 
@@ -107,6 +109,11 @@ function Game.new()
 		if player.getCardNumber() == 0 then
 			_has_ended = true
 			print(player.name .. " HAS WON THE GAME")
+			-- TODO improve
+			-- for i = 1, #_player_list do
+			-- 	print( _player_list[i] .. "had " ..
+			-- 		_player_list[i].getCardNumber() .. "cards left")
+			-- end
 			return true
 		else
 			return false
@@ -116,7 +123,7 @@ function Game.new()
 	---Shuffle _played_pile and insert cards in empty deck
 	local function refillDeck()
 		table.shuffle(_played_pile)
-		for i = 1, #_played_pile do
+		for _ = 1, #_played_pile do
 			table.insert(_deck, table.remove(_played_pile, 1))
 		end
 	end
@@ -125,6 +132,7 @@ function Game.new()
 	---then pass
 	local function takeOrPass(player)
 		if not player.has_drawn then
+			print(player.name .. " draws a card")
 			player.takeCard(_deck)
 			player.has_drawn = true
 		else
@@ -151,7 +159,6 @@ function Game.new()
 		else
 			print("\27[1;31mCANT PLAY THAT CARD \27[0m")
 		end
-		print("---------------------")
 	end
 
 	---Prints cards of current player
@@ -201,11 +208,13 @@ function Game.new()
 	---Main loop of the game
 	function self.play()
 
-		io.write("Current card: \n=> ")
-		_current_card.print()
-
 		local player = _player_list[_turn.index]
-		showPlayableCards()
+
+		if player.isHuman() then
+			io.write("Current card: \n=> ")
+			_current_card.print()
+			showPlayableCards()
+		end
 
 		local play_move = player.chooseCard(_current_card)
 
@@ -223,6 +232,8 @@ function Game.new()
 			print("DECK IS EMPTY")
 			refillDeck()
 		end
+
+		print("---------------------")
 
 		-- print("------ Played cards")
 		-- for i = 1, #_played_pile do

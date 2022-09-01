@@ -1,4 +1,5 @@
 local Input = require("input")
+local AI    = require("ai")
 
 ---
 ---@class Player
@@ -10,8 +11,6 @@ function Player.new(o)
 	-------------------------------------------------------------------------------
 	local self = {
 		name = o.name or "name",
-		human = (o.human == nil or o.human == true or false), -- default true
-
 		-- TODO private ??
 		-- if it has drawn in its turn
 		has_drawn = false
@@ -21,10 +20,12 @@ function Player.new(o)
 	-- Private members
 	-------------------------------------------------------------------------------
 	local _cards = {}
+	local _human = (o.human == nil or o.human == true or false) -- default true
 
 	-------------------------------------------------------------------------------
 	-- Public functions
 	-------------------------------------------------------------------------------
+	function self.isHuman() return _human end
 
 	---Deal cards to player
 	---@param deck table
@@ -62,16 +63,19 @@ function Player.new(o)
 	---@param current_card table Card
 	---@return integer index of chosen card
 	function self.chooseCard(current_card)
-		-- AI.getPlayableCards(_cards, current_card)
-		if self.human then
+		if _human then
 			return Input.readNumber(#_cards)
+		else
+			return AI.chooseCard(_cards, current_card)
 		end
 	end
 
 	---@return number index of chosen card
-	function self.chooseColor()
-		if self.human then
+	function self.chooseColor(current_card)
+		if _human then
 			return Input.readNumber(4)
+		else
+			return AI.chooseColor(_cards, current_card)
 		end
 	end
 

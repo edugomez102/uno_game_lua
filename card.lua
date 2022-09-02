@@ -1,3 +1,5 @@
+local tint = require("tint")
+
 ---
 ---@class Card
 ---
@@ -9,7 +11,8 @@ Card.card_colors = { "R", "B", "Y", "G", "K" }
 ---Show available card colors
 function Card.showColors()
 	for i = 1, 4 do
-		print("[" .. i .. "]: " .. Card.card_colors[i])
+		io.write("[" .. i .. "]: ")
+		io.write(tint(Card.card_colors[i] .. "\n", Card.card_colors[i]))
 	end
 end
 
@@ -26,7 +29,7 @@ function Card.new(o)
 	-- Public functions
 	-------------------------------------------------------------------------------
 	function self.print()
-		print(self.color .. " - " .. self.number)
+		io.write(tint(self.color .. " - " .. self.number .. "\n", self.color))
 	end
 
 	function self.__tostring()
@@ -34,7 +37,8 @@ function Card.new(o)
 	end
 
 	function self.printToSelect(index)
-		print("[".. index .."]: " .. self.color .. " - " .. self.number)
+		io.write("[".. index .."]: ")
+		io.write(tint( self.color .. " - " .. self.number .. "\n", self.color))
 	end
 
 	return self

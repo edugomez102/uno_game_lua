@@ -82,7 +82,7 @@ function Player.new(o)
 	---TODO use tostirng
 	---@param select boolean true to show index of cards
 	function self.printCards(select)
-		print("== Cards of " .. self.name .. " ==")
+		io.write("== Cards of " .. self.name .. " ==\n")
 		for i = 1, #_cards do
 			if select then
 				_cards[i].printToSelect(i)

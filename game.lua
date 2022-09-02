@@ -1,6 +1,7 @@
 local Deck  = require("deck")
 local Card  = require("card")
 local Rules = require("rules")
+local tint  = require("tint")
 
 ---
 ---@class Game
@@ -57,12 +58,12 @@ function Game.new()
 	local function changeNextCardColor()
 		local player = _player_list[_turn.index]
 		if player.isHuman() then
-			print("Select a card color")
+			io.write("Select a card color\n")
 			Card.showColors()
 		end
 		local option = player.chooseColor(_current_card)
 		_current_card = Card.new({number = "any", color = Card.card_colors[option]})
-		print(player.name .. " changed color to " .. Card.card_colors[option])
+		io.write(player.name .. " changed color to " .. Card.card_colors[option], "\n")
 
 	end
 
@@ -93,11 +94,11 @@ function Game.new()
 		["wild"] = changeNextCardColor
 	}
 
-	---Checks if played card makes changes in the game
+	---Checks if played card is an action card and calls its function
 	---@param card table Card to check
 	local function checkActionCard(card)
 		if table.has_key(_action_cards, card.number) then
-			print("ACTION CARD")
+			-- io.write("ACTION CARD\n")
 			_action_cards[card.number](_turn, _player_list[_turn.index])
 		end
 	end
@@ -108,12 +109,14 @@ function Game.new()
 		local player = _player_list[_turn.index]
 		if player.getCardNumber() == 0 then
 			_has_ended = true
-			print(player.name .. " HAS WON THE GAME")
+			io.write("=====================\n")
+			io.write(player.name .. " HAS WON THE GAME\n")
+			io.write("=====================\n")
 			-- TODO improve
-			-- for i = 1, #_player_list do
-			-- 	print( _player_list[i] .. "had " ..
-			-- 		_player_list[i].getCardNumber() .. "cards left")
-			-- end
+			for i = 1, #_player_list do
+				io.write( _player_list[i].name .. " had " ..
+					_player_list[i].getCardNumber() .. " cards left\n")
+			end
 			return true
 		else
 			return false
@@ -130,13 +133,14 @@ function Game.new()
 
 	---Take or pass card. if player has already taken a card
 	---then pass
-	local function takeOrPass(player)
+	local function takeOrPass()
+		local player = _player_list[_turn.index]
 		if not player.has_drawn then
-			print(player.name .. " draws a card")
+			io.write(player.name .. " draws a card\n")
 			player.takeCard(_deck)
 			player.has_drawn = true
 		else
-			print(_player_list[_turn.index].name .. " has passed its turn")
+			io.write(_player_list[_turn.index].name .. " has passed their turn\n")
 			incrementTurn()
 		end
 	end
@@ -157,7 +161,7 @@ function Game.new()
 			if checkLastCard() then return end
 			incrementTurn()
 		else
-			print("\27[1;31mCANT PLAY THAT CARD \27[0m")
+			io.write(tint("CANT PLAY THAT CARD\n", "M"))
 		end
 	end
 
@@ -165,11 +169,11 @@ function Game.new()
 	local function showPlayableCards()
 		_player_list[_turn.index].printCards(true)
 		if not _player_list[_turn.index].has_drawn then
-			print("[0]: draw card")
+			io.write("[0]: draw card\n")
 		else
-			print("[0]: pass")
+			io.write("[0]: pass\n")
 		end
-		print("---------------------")
+		io.write("---------------------\n")
 	end
 
 	---TODO apply action card rules when firsr card is an action card
@@ -207,11 +211,10 @@ function Game.new()
 
 	---Main loop of the game
 	function self.play()
-
 		local player = _player_list[_turn.index]
 
 		if player.isHuman() then
-			io.write("Current card: \n=> ")
+			io.write("Current card: \n==> ")
 			_current_card.print()
 			showPlayableCards()
 		end
@@ -219,7 +222,7 @@ function Game.new()
 		local play_move = player.chooseCard(_current_card)
 
 		if play_move == 0 then
-			takeOrPass(player)
+			takeOrPass()
 		else
 			local card_to_play = player.getCard(play_move)
 			io.write(player.name .. " played card: ")
@@ -228,12 +231,9 @@ function Game.new()
 			playCard(card_to_play, play_move)
 		end
 
-		if table.empty(_deck) then
-			print("DECK IS EMPTY")
-			refillDeck()
-		end
+		if table.empty(_deck) then refillDeck() end
 
-		print("---------------------")
+		io.write("---------------------\n")
 
 		-- print("------ Played cards")
 		-- for i = 1, #_played_pile do

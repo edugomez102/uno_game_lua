@@ -10,7 +10,7 @@ function Input.readNumber(max_num)
 		a = tonumber(a)
 		if a ~= nil and a > max_num then a = nil end
 		if not a then
-			print("Incorrect Input!(Try using only numbers)")
+			io.write("Incorrect Input!(Try using only numbers)\n")
 		end
 	until a
 	return a

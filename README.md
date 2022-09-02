@@ -9,7 +9,8 @@ following the [oficial rules](https://en.wikipedia.org/wiki/Uno_(card_game))
 
 ## Quick Guide
 
-1. go to `main.lua` and change human to false if you want it to be AI controlled
+1. go to `main.lua` and change human to false if you want the player to be
+AI controlled
 2. run `lua main.lua`
 
 ```lua

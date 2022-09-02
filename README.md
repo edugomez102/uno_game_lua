@@ -1,5 +1,7 @@
 # UNO card game in lua
 
+following the [oficial rules](https://en.wikipedia.org/wiki/Uno_(card_game))
+
 ## Differences with real game
 
 * Can't say UNO when a player has one card left

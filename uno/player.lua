@@ -84,11 +84,9 @@ function Player.new(o)
 	function self.printCards(select)
 		io.write("== Cards of " .. self.name .. " ==\n")
 		for i = 1, #_cards do
-			if select then
-				_cards[i].printToSelect(i)
-			else
-				_cards[i].print()
-			end
+
+			-- local a = (select and _cards[i].print() or _cards[i].print(i))
+			_cards[i].print(select and i or nil)
 		end
 	end
 

@@ -8,8 +8,10 @@ local Card = {}
 
 Card.card_colors = { "R", "B", "Y", "G", "K" }
 
----Show available card colors
+---Show available card colors to select
+---
 function Card.showColors()
+	io.write("Select a card color\n")
 	for i = 1, 4 do
 		io.write("[" .. i .. "]: ")
 		io.write(tint(Card.card_colors[i] .. "\n", Card.card_colors[i]))
@@ -28,18 +30,18 @@ function Card.new(o)
 	-------------------------------------------------------------------------------
 	-- Public functions
 	-------------------------------------------------------------------------------
-	function self.print()
+
+	---Print card
+	---
+	---@param index integer print a number before card to show index in card list
+	function self.print(index)
+		if index then io.write("[".. index .."]: ") end
 		io.write(tint(self.color .. " - " .. self.number .. "\n", self.color))
 	end
 
-	function self.__tostring()
-		return "Card:" .. self.color .. ", " .. self.number
-	end
-
-	function self.printToSelect(index)
-		io.write("[".. index .."]: ")
-		io.write(tint( self.color .. " - " .. self.number .. "\n", self.color))
-	end
+	-- function self.__tostring()
+	-- 	return "Card:" .. self.color .. ", " .. self.number
+	-- end
 
 	return self
 end

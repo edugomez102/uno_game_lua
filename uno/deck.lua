@@ -1,4 +1,4 @@
-local Card = require("card")
+local Card = require("uno.card")
 
 local Deck = {} -- namespace
 

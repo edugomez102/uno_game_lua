@@ -1,5 +1,5 @@
-local Input = require("input")
-local AI    = require("ai")
+local Input = require("modules.input")
+local AI    = require("uno.ai")
 
 ---
 ---@class Player
@@ -25,12 +25,12 @@ function Player.new(o)
 	-------------------------------------------------------------------------------
 	-- Public functions
 	-------------------------------------------------------------------------------
+
 	function self.isHuman() return _human end
 
 	---Deal cards to player
 	---@param deck table
 	function self.dealCards(deck)
-		-- TODO set to 7
 		for _ = 1, 7 do
 			table.insert(_cards, table.remove(deck, 1))
 		end

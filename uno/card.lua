@@ -1,4 +1,4 @@
-local tint = require("tint")
+local tint = require("modules.tint")
 
 ---
 ---@class Card

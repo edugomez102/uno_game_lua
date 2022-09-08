@@ -1,4 +1,4 @@
-Rules = require("rules")
+Rules = require("uno.rules")
 
 local AI = {}
 

@@ -26,6 +26,19 @@ function table.has_value(t, element)
 	return false
 end
 
+---Counts number of elements in a table
+---@param t table
+---@param element any to check
+function table.count_value(t, element)
+	local count = 0
+	for _, v in pairs(t) do
+		if v == element then
+			count = count + 1
+		end
+	end
+	return count
+end
+
 ---Check if table is empty
 ---@param t table to check
 function table.empty(t)

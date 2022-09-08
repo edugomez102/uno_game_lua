@@ -1,7 +1,7 @@
-local Deck  = require("deck")
-local Card  = require("card")
-local Rules = require("rules")
-local tint  = require("tint")
+local Deck  = require("uno.deck")
+local Card  = require("uno.card")
+local Rules = require("uno.rules")
+local tint  = require("modules.tint")
 
 ---
 ---@class Game
@@ -47,14 +47,18 @@ function Game.new()
 		return turn_index
 	end
 
+	---
 	---Update _turn.index to the next playing player on the list
+	---
+	---and set has_drawn false for next turn player
 	local function incrementTurn()
 		_turn.index = getNextTurn(_turn.index)
-		-- set has_drawn false for next turn player
 		_player_list[_turn.index].has_drawn = false
 	end
 
+	---
 	---Let player choose next color to play
+	---
 	local function changeNextCardColor()
 		local player = _player_list[_turn.index]
 		if player.isHuman() then
@@ -64,41 +68,38 @@ function Game.new()
 		local option = player.chooseColor(_current_card)
 		_current_card = Card.new({number = "any", color = Card.card_colors[option]})
 		io.write(player.name .. " changed color to " .. Card.card_colors[option], "\n")
-
 	end
 
 	---Action cards behaviour
-	local _action_cards = {
-		["skip"] = incrementTurn,
-		["reverse"] =
-		function()
-			_turn.dir = not _turn.dir
-		end,
-		["draw two"] =
-		---Makes the next player draw two cards
-		function()
-			local next_player = _player_list[getNextTurn(_turn.index)]
-			next_player.takeCard(_deck)
-			next_player.takeCard(_deck)
-		end,
-		["wild draw 4"] =
-		---Let the current player choose color and make the next player 
-		---draw four cards
-		function()
-			changeNextCardColor()
-			local next_player = _player_list[getNextTurn(_turn.index)]
-			for _ = 1, 4 do
-				next_player.takeCard(_deck)
-			end
-		end,
-		["wild"] = changeNextCardColor
+	local _action_cards =
+	{
+		["skip"]    =   	incrementTurn,
+							---Invert turn direction
+		["reverse"] =   	function()
+								_turn.dir = not _turn.dir
+							end,
+							---Makes the next player draw two cards
+		["draw two"] =  	function()
+								local next_player = _player_list[getNextTurn(_turn.index)]
+								next_player.takeCard(_deck)
+								next_player.takeCard(_deck)
+							end,
+							---Let the current player choose color and make the next player
+							---draw four cards
+		["wild draw 4"] =   function()
+								changeNextCardColor()
+								local next_player = _player_list[getNextTurn(_turn.index)]
+								for _ = 1, 4 do
+									next_player.takeCard(_deck)
+								end
+							end,
+		["wild"] =  		changeNextCardColor
 	}
 
 	---Checks if played card is an action card and calls its function
 	---@param card table Card to check
 	local function checkActionCard(card)
 		if table.has_key(_action_cards, card.number) then
-			-- io.write("ACTION CARD\n")
 			_action_cards[card.number](_turn, _player_list[_turn.index])
 		end
 	end
@@ -145,7 +146,10 @@ function Game.new()
 		end
 	end
 
-	---Checks if card can be playable and icrements player _turn.index if so
+	---
+	---Checks if card can be playable and icrements player _turn.index if so and
+	---update _current_card to the played card
+	---
 	---@param card_to_play table Card
 	---@param play_move integer index of card in _player_list
 	local function playCard(card_to_play, play_move)
@@ -204,9 +208,6 @@ function Game.new()
 			_player_list[i].dealCards(_deck)
 		end
 		setInitialCard()
-		-- print("--- _deck ---")
-		-- Deck.printDeck(_deck)
-		-- print("Card number:" .. #_deck)
 	end
 
 	---Main loop of the game

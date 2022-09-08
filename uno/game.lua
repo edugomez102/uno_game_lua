@@ -1,7 +1,6 @@
 local Deck  = require("uno.deck")
 local Card  = require("uno.card")
 local Rules = require("uno.rules")
-local tint  = require("modules.tint")
 local Output = require("uno.Output")
 
 ---
@@ -134,11 +133,11 @@ function Game.new()
 	local function takeOrPass()
 		local player = _player_list[_turn.index]
 		if not player.has_drawn then
-			io.write(player.name .. " draws a card\n")
+			Output.playerDraws(player)
 			player.takeCard(_deck)
 			player.has_drawn = true
 		else
-			io.write(_player_list[_turn.index].name .. " has passed their turn\n")
+			Output.turnPass(player)
 			incrementTurn()
 		end
 	end
@@ -162,7 +161,7 @@ function Game.new()
 			if checkLastCard() then return end
 			incrementTurn()
 		else
-			io.write(tint("CANT PLAY THAT CARD\n", "M"))
+			Output.cantPlay()
 		end
 	end
 
@@ -195,7 +194,7 @@ function Game.new()
 	---
 	function self.start()
 		if #_player_list > 10 or #_player_list < 2 then
-			io.write("Wrong number of players\n")
+			Output.wrongNumberPlayers()
 			_has_ended = true
 		end
 		for i = 1, #_player_list do

@@ -24,7 +24,8 @@ function Card.new(o)
 	-------------------------------------------------------------------------------
 	local self = {
 		number = o.number or 0,
-		color  = o.color or "K"
+		color  = o.color or "K",
+		img    = o.img
 	}
 
 	-------------------------------------------------------------------------------
@@ -39,6 +40,8 @@ function Card.new(o)
 		io.write(tint(self.color .. " - " .. self.number .. "\n", self.color))
 	end
 
+	function self.draw(x, y)
+	end
 	-- function self.__tostring()
 	-- 	return "Card:" .. self.color .. ", " .. self.number
 	-- end

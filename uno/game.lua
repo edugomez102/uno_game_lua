@@ -1,7 +1,8 @@
 local Deck  = require("uno.deck")
 local Card  = require("uno.card")
 local Rules = require("uno.rules")
-local Output = require("uno.Output")
+local tint  = require("modules.tint")
+local Output = require("uno.output")
 
 ---
 ---@class Game

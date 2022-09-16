@@ -34,23 +34,30 @@ function AI.chooseCard(cards, current_card)
 	else
 		return playable_indexes[math.random(#playable_indexes)]
 	end
-
-	-- for i = 1, #playable_indexes do
-	-- 	cards[playable_indexes[i]].print()
-	-- end
 end
 
--- TODO improve
----Randomly chooses a color index
+---Checks for the most common color and returns its color index
 ---@param cards table Card list to check for most color
 ---@param current_card table Card to play
 function AI.chooseColor(cards, current_card)
-	-- local colors = {}
-	-- for i = 1, #cards do
-	-- 	table.insert(colors, cards.color)
-	-- end
-	return math.random(1, 4)
-end
+	--                     R  B  Y  G
+	local color_number = { 0, 0, 0, 0 }
+	for _, v in pairs(cards) do
+		if v.color == "R" then
+			color_number[1] = color_number[1] + 1
+		end
+		if v.color == "B" then
+			color_number[2] = color_number[2] + 1
+		end
+		if v.color == "Y" then
+			color_number[3] = color_number[3] + 1
+		end
+		if v.color == "G" then
+			color_number[4] = color_number[4] + 1
+		end
+	end
 
+	return table.max_key(color_number)
+end
 
 return AI

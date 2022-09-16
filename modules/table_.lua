@@ -57,3 +57,15 @@ function table.shuffle(t)
 		t[i], t[j] = t[j], t[i]
 	end
 end
+
+---Retuns key of max number of table
+---@param t table to shuffle
+function table.max_key(t)
+	local key, max = 1, t[1]
+	for k, v in ipairs(t) do
+		if t[k] > max then
+			key, max = k, v
+		end
+	end
+	return key
+end

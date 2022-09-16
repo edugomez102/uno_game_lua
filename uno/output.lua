@@ -58,7 +58,7 @@ end
 ---@param color table Color
 function Output.colorChange(player, color)
 	if not Output.active then return end
-	io.write(player.name .. " changed color to " .. color, "\n")
+	io.write(player.name .. " changed color to " .. tint(color, color), "\n")
 end
 
 function Output.playerDraws(player)

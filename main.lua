@@ -9,7 +9,7 @@ local players = {
 	Player.new({name = "P4", human = false}),
 }
 
-local game = Game.new()
+local game = Game.new({sort_cards = true})
 
 for i = 1, #players do
 	game.addPlayer(players[i])

@@ -55,15 +55,20 @@ end
 ---Print changed color
 ---
 ---@param player table Player
----@param color table Color
+---@param color string Color
 function Output.colorChange(player, color)
 	if not Output.active then return end
 	io.write(player.name .. " changed color to " .. tint(color, color), "\n")
 end
 
-function Output.playerDraws(player)
+function Output.playerDraws(player, card)
 	if not Output.active then return end
-	io.write(player.name .. " draws a card\n")
+  if player.isHuman() then
+    io.write(player.name .. " draws card ")
+    card.print()
+  else
+    io.write(player.name .. " draws a card\n")
+  end
 end
 
 function Output.turnPass(player)

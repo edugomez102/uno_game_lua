@@ -19,12 +19,21 @@ function Player.new(o)
 	-------------------------------------------------------------------------------
 	-- Private members
 	-------------------------------------------------------------------------------
+
 	local _cards = {}
 	local _human = (o.human == nil or o.human == true or false) -- default true
 
 	-------------------------------------------------------------------------------
 	-- Public functions
 	-------------------------------------------------------------------------------
+
+  ---Sorts cards of player
+  ---
+  function self.sortCards()
+    table.sort(_cards, function(c1, c2)
+      return c1.color < c2.color
+    end)
+  end
 
 	function self.isHuman() return _human end
 

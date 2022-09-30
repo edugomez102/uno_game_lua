@@ -1,7 +1,6 @@
 local Deck  = require("uno.deck")
 local Card  = require("uno.card")
 local Rules = require("uno.rules")
-local tint  = require("modules.tint")
 local Output = require("uno.output")
 
 ---
@@ -9,8 +8,10 @@ local Output = require("uno.output")
 ---
 local Game = {}
 
-function Game.new()
-	local self = {}
+function Game.new(o)
+  local self = {
+    sort_cards = o.sort_cards or false
+  }
 
 	-------------------------------------------------------------------------------
 	-- Private members
@@ -132,10 +133,10 @@ function Game.new()
 	---Take or pass card. if player has already taken a card then pass
 	---
 	local function takeOrPass()
-		local player = _player_list[_turn.index]
+		local player = _player_list[_turn.index] -- Player
 		if not player.has_drawn then
-			Output.playerDraws(player)
-			player.takeCard(_deck)
+      local card = player.takeCard(_deck)
+			Output.playerDraws(player, card)
 			player.has_drawn = true
 		else
 			Output.turnPass(player)
@@ -210,6 +211,7 @@ function Game.new()
 		local player = _player_list[_turn.index]
 
 		if player.isHuman() then
+      if self.sort_cards then player.sortCards() end
 			Output.playerTurn(player, _current_card)
 		end
 

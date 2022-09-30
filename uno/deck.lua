@@ -28,7 +28,7 @@ local function addColors(deck, from_number, color)
 			img = img .. i
 		end
 		img = img .. ".png"
-		c.img = img
+		c.setImg(img)
 		table.insert(deck, c)
 	end
 end
@@ -38,14 +38,14 @@ end
 local function addBlack(deck)
 	for _ = 1, 4 do
 		table.insert(deck, Card.new({
-					number = "wild draw 4",
-					img = "img/K_+4.png",
+					number   = "wild draw 4",
+					img_path = "img/K_+4.png",
 			}))
 	end
 	for _ = 1, 4 do
 		table.insert(deck, Card.new({
 					number = "wild",
-					img = "img/K_wild.png",
+					img_path = "img/K_wild.png",
 			}))
 	end
 end

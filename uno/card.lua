@@ -5,6 +5,8 @@ local tint = require("modules.tint")
 ---
 
 local Card = {}
+Card.w = 72
+Card.h = 108
 
 Card.card_colors = { "R", "B", "Y", "G", "K" }
 
@@ -25,12 +27,16 @@ function Card.new(o)
 	local self = {
 		number = o.number or 0,
 		color  = o.color or "K",
-		img    = o.img
+		img    = (o.img_path and love.graphics.newImage(o.img_path) or nil)
 	}
 
 	-------------------------------------------------------------------------------
 	-- Public functions
 	-------------------------------------------------------------------------------
+
+	function self.setImg(path)
+		self.img = love.graphics.newImage(path)
+	end
 
 	---Print card
 	---
@@ -41,6 +47,7 @@ function Card.new(o)
 	end
 
 	function self.draw(x, y)
+		love.graphics.draw(self.img, x, y)
 	end
 	-- function self.__tostring()
 	-- 	return "Card:" .. self.color .. ", " .. self.number

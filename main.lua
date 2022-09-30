@@ -15,9 +15,23 @@ for i = 1, #players do
 	game.addPlayer(players[i])
 end
 
-game.start()
 
-while not game.hasEnded() do
-	game.play()
+-- while not game.hasEnded() do
+-- 	game.play()
+-- end
+
+function love.load()
+	love.window.setMode(1280, 720)
+  game.start()
+
+end
+
+function love.update()
+  game.clicks()
+end
+
+function love.draw()
+	game.draw()
+
 end
 

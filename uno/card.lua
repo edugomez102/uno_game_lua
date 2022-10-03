@@ -27,7 +27,7 @@ function Card.new(o)
 	local self = {
 		number = o.number or 0,
 		color  = o.color or "K",
-		img    = (o.img_path and love.graphics.newImage(o.img_path) or nil)
+		img    = love.graphics.newImage(o.img_path) or nil
 	}
 
 	-------------------------------------------------------------------------------
@@ -55,5 +55,12 @@ function Card.new(o)
 
 	return self
 end
+
+Card.any = {
+  Card.new{number = "any", color = "R", img_path = ("img/R_.png")},
+  Card.new{number = "any", color = "B", img_path = ("img/B_.png")},
+  Card.new{number = "any", color = "Y", img_path = ("img/Y_.png")},
+  Card.new{number = "any", color = "G", img_path = ("img/G_.png")},
+}
 
 return Card

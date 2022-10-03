@@ -12,24 +12,23 @@ local Deck = {} -- namespace
 ---@param color string with color name
 local function addColors(deck, from_number, color)
 	for i = from_number, 12 do
-		local c = Card.new({number = i, color = color})
+    local number
 		local img = "img/" .. color .. "_"
 		if i == 10 then
-			c.number = "skip"
+			number = "skip"
 			img = img .. "skip"
 		elseif i == 11 then
-			c.number = "reverse"
+			number = "reverse"
 			img = img .. "reverse"
 		elseif i == 12 then
-			c.number = "draw two"
+			number = "draw two"
 			img = img .. "+2"
 		else
-			c.number = i
+			number = i
 			img = img .. i
 		end
 		img = img .. ".png"
-		c.setImg(img)
-		table.insert(deck, c)
+		table.insert(deck, Card.new{number = number, color = color, img_path = img})
 	end
 end
 

@@ -27,7 +27,7 @@ function love.load()
 end
 
 function love.update()
-  game.clicks()
+  game.update()
   -- game.play()
 end
 

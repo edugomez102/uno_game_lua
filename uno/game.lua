@@ -2,8 +2,8 @@ local Deck  = require("uno.deck")
 local Card  = require("uno.card")
 local Rules = require("uno.rules")
 local Output = require("uno.output")
-local P     = require("gui.positions")
 local Render = require("gui.render")
+local Input  = require("gui.input")
 
 ---
 ---@class Game
@@ -213,20 +213,8 @@ function Game.new(o)
 		-- end
 	end
 
-  function self.clicks()
-    -- function love.mousepressed(x, y, button, istouch, presses )
-    --   for i = 1, 10 do
-    --     local xpos = P.card_list.x + (i - 1) * P.card_list.margin
-    --     if button == 1 and -- right click
-    --        x > xpos and x < xpos + Card.w and
-    --        y > P.card_list.y and y < P.card_list.y + Card.h then
-    --
-    --       print("hola:", i)
-    --       return i
-    --     end
-    --   end
-    -- end
-
+  function self.update()
+    Input.update()
   end
 
 	---Main loop of the game

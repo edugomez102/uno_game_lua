@@ -18,6 +18,7 @@ function Game.new(o)
 	-------------------------------------------------------------------------------
 	-- Private members
 	-------------------------------------------------------------------------------
+  local game_state = {}
 	local _player_list = {}
 	local _deck = Deck.generateDeck()
 	local _current_card = {}
@@ -213,19 +214,18 @@ function Game.new(o)
 	end
 
   function self.clicks()
-
-    function love.mousepressed(x, y, button, istouch, presses )
-      for i = 1, 10 do
-        local xpos = P.card_list.x + (i - 1) * P.card_list.margin
-        if button == 1 and -- right click
-           x > xpos and x < xpos + Card.w and
-           y > P.card_list.y and y < P.card_list.y + Card.h then
-
-          print("hola:", i)
-          return i
-        end
-      end
-    end
+    -- function love.mousepressed(x, y, button, istouch, presses )
+    --   for i = 1, 10 do
+    --     local xpos = P.card_list.x + (i - 1) * P.card_list.margin
+    --     if button == 1 and -- right click
+    --        x > xpos and x < xpos + Card.w and
+    --        y > P.card_list.y and y < P.card_list.y + Card.h then
+    --
+    --       print("hola:", i)
+    --       return i
+    --     end
+    --   end
+    -- end
 
   end
 
@@ -258,10 +258,11 @@ function Game.new(o)
     -- player.sortCards()
 
     Render:background()
-    Render:playingDirection()
+    Render:playingDirection(_turn.dir)
     Render:players(_player_list)
 
-    -- Render.selectCards(player.getCards())
+    Render.currentCard(_current_card)
+    Render.selectCards(player.getCards())
     -- Render.selectCards(_deck)
     -- Render.selectCards(Card.any)
 

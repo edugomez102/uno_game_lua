@@ -21,10 +21,15 @@ function Render:background()
   love.graphics.pop()
 end
 
----Renders arrow
+---Renders arrow. flips arrow if direction is false
 ---
-function Render:playingDirection()
-  love.graphics.draw(self.arrow_img, P.direction.x, P.direction.y)
+function Render:playingDirection(dir)
+  -- TODO invertir
+  local scale, margin = 1, 0
+  if not dir then
+    scale = -1; margin = self.arrow_img:getWidth()
+  end
+  love.graphics.draw(self.arrow_img, P.direction.x + margin, P.direction.y, 0, scale, 1)
 end
 
 

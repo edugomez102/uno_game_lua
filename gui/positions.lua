@@ -8,6 +8,11 @@ return {
     x = 42, y = 537,
     margin = 8.27 + Card.w
   },
+  card_list_s = {
+    x = 42, y1 = 502, y2 = 599,
+    scale = 0.75,
+    margin = 9.5 + Card.w * 0.75
+  },
   player_list = {
     x = 44, y = 391,
     margin = 33.66

@@ -3,6 +3,7 @@ local Card  = require("uno.card")
 local Rules = require("uno.rules")
 local Output = require("uno.output")
 local P     = require("gui.positions")
+local Render = require("gui.render")
 
 ---
 ---@class Game
@@ -26,7 +27,6 @@ function Game.new(o)
 		index = 1,
 		dir   = true
 	}
-  local bg_img = love.graphics.newImage("img/uno_layout.png")
 
 	-------------------------------------------------------------------------------
 	-- Private functions
@@ -217,13 +217,16 @@ function Game.new(o)
     function love.mousepressed(x, y, button, istouch, presses )
       for i = 1, 10 do
         local xpos = P.card_list.x + (i - 1) * P.card_list.margin
-        if x > xpos and x < xpos + Card.w and
+        if button == 1 and -- right click
+           x > xpos and x < xpos + Card.w and
            y > P.card_list.y and y < P.card_list.y + Card.h then
 
           print("hola:", i)
+          return i
         end
       end
     end
+
   end
 
 	---Main loop of the game
@@ -250,28 +253,19 @@ function Game.new(o)
 		Output.separator()
 	end
 
-  local function drawBackground()
-    love.graphics.push()
-    local s = 0.24
-    love.graphics.scale(s, s)
-    love.graphics.draw(bg_img, 0, 0)
-    love.graphics.pop()
-  end
-
 	function self.draw()
-    drawBackground()
+    local player = _player_list[_turn.index]
+    -- player.sortCards()
 
-    for i = 1, 15 do
-      _deck[i].draw(P.card_list.x + (i - 1) * (P.card_list.margin), P.card_list.y)
-    end
+    Render:drawBackground()
+    Render:playingDirection()
+    Render:players(_player_list)
 
-    -- love.graphics.push()
-    -- local s = 2
-    -- love.graphics.scale(s, s)
-    -- _deck[5].draw(568/s, 83/s)
-    -- love.graphics.pop()
+    Render.drawCurrentCard(_current_card)
+    Render.drawPlayerCards(player.getCards())
+    -- Render.drawPlayerCards(_deck)
 
-		-- love.graphics.draw(_deck[1].img, 0, 0)
+    Render:Text("Hola")
 
 	end
 

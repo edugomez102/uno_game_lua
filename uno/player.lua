@@ -63,6 +63,9 @@ function Player.new(o)
 	---@return table Card object
 	function self.getCard(index) return _cards[index] end
 
+  -- TODO delete
+  function self.getCards() return _cards end
+
 	-- TODO Delete
 	function self.setCard(card) table.insert(_cards, card) end
 

@@ -28,6 +28,7 @@ end
 
 function love.update()
   game.clicks()
+  -- game.play()
 end
 
 function love.draw()

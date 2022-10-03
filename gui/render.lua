@@ -4,7 +4,7 @@ local Render = {
   bg_img     = love.graphics.newImage("img/uno_layout.png"),
   arrow_img  = love.graphics.newImage("img/arrow.png"),
   player_img = love.graphics.newImage("img/person_1.png"),
-  font       = love.graphics.newFont(30)
+  font       = love.graphics.newFont(20)
 }
 
 -------------------------------------------------------------------------------
@@ -47,8 +47,13 @@ end
 function Render:players(players)
   for i = 1, #players do
     love.graphics.draw(self.player_img,
-    P.player_list.x + (i - 1) * (self.player_img.getWidth(self.player_img) + P.player_list.margin),
-    P.player_list.y)
+      P.player_list.x + (i - 1) * (self.player_img:getWidth() + P.player_list.margin),
+      P.player_list.y)
+
+    -- TODO place text in top of img
+    love.graphics.print(players[i].name,
+      P.player_list.x + (i - 1) * (self.player_img:getWidth() + P.player_list.margin),
+      P.player_list.y)
   end
 end
 

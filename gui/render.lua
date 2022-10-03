@@ -13,7 +13,7 @@ local Render = {
 
 ---Renders background
 ---
-function Render:drawBackground()
+function Render:background()
   love.graphics.push()
   local s = 0.24
   love.graphics.scale(s, s)
@@ -54,7 +54,7 @@ end
 ---Renders card to be played
 ---
 ---@param card table
-function Render.drawCurrentCard(card)
+function Render.currentCard(card)
   love.graphics.push()
   local s = 2
   love.graphics.scale(s, s)
@@ -84,7 +84,7 @@ end
 ---Renders cards of player in layout
 ---
 ---@param cards table
-function Render.drawPlayerCards(cards)
+function Render.selectCards(cards)
   if #cards < 15 then
     for i = 1, #cards do
       cards[i].draw(P.card_list.x + (i - 1) * (P.card_list.margin), P.card_list.y)

@@ -257,13 +257,13 @@ function Game.new(o)
     local player = _player_list[_turn.index]
     -- player.sortCards()
 
-    Render:drawBackground()
+    Render:background()
     Render:playingDirection()
     Render:players(_player_list)
 
-    Render.drawCurrentCard(_current_card)
-    Render.drawPlayerCards(player.getCards())
-    -- Render.drawPlayerCards(_deck)
+    -- Render.selectCards(player.getCards())
+    -- Render.selectCards(_deck)
+    -- Render.selectCards(Card.any)
 
     Render:Text("Hola")
 

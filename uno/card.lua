@@ -49,9 +49,10 @@ function Card.new(o)
 	function self.draw(x, y)
 		love.graphics.draw(self.img, x, y)
 	end
-	-- function self.__tostring()
-	-- 	return "Card:" .. self.color .. ", " .. self.number
-	-- end
+
+	function self.__tostring()
+		return self.color .. ", " .. self.number
+	end
 
 	return self
 end
@@ -62,5 +63,13 @@ Card.any = {
   Card.new{number = "any", color = "Y", img_path = ("img/Y_.png")},
   Card.new{number = "any", color = "G", img_path = ("img/G_.png")},
 }
+
+function Card.getAnyByColor(color)
+  for _, v in pairs(Card.any) do
+    if v.color == color then
+      return v
+    end
+  end
+end
 
 return Card

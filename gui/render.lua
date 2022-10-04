@@ -7,6 +7,10 @@ local Render = {
   font       = love.graphics.newFont(20)
 }
 
+local function resetColors()
+  love.graphics.setColor(255, 255, 255)
+end
+
 -------------------------------------------------------------------------------
 -- Public functions
 -------------------------------------------------------------------------------
@@ -55,6 +59,16 @@ function Render:players(players)
       P.player_list.x + (i - 1) * (self.player_img:getWidth() + P.player_list.margin),
       P.player_list.y)
   end
+end
+
+function Render:turn(index)
+  local w_h = self.player_img:getWidth()
+  local xpos = P.player_list.x + (index - 1) *
+  (self.player_img:getWidth() + P.player_list.margin)
+
+  love.graphics.setColor(255, 0, 0)
+  love.graphics.rectangle( "fill", xpos, P.player_list.y, w_h, w_h)
+  resetColors()
 end
 
 -------------------------------------------------------------------------------

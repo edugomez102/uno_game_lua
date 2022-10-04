@@ -28,6 +28,7 @@ function Game.new(o)
 		index = 1,
 		dir   = true
 	}
+  local render_text = ""
 
 	-------------------------------------------------------------------------------
 	-- Private functions
@@ -213,10 +214,6 @@ function Game.new(o)
 		-- end
 	end
 
-  function self.update()
-    Input.update()
-  end
-
 	---Main loop of the game
 	---
 	function self.play()
@@ -241,15 +238,21 @@ function Game.new(o)
 		Output.separator()
 	end
 
+  function self.update()
+    Input.update()
+  end
+
 	function self.draw()
     local player = _player_list[_turn.index]
     -- player.sortCards()
 
     Render:background()
     Render:playingDirection(_turn.dir)
+    Render:turn(_turn.index)
     Render:players(_player_list)
 
     Render.currentCard(_current_card)
+
     Render.selectCards(player.getCards())
     -- Render.selectCards(_deck)
     -- Render.selectCards(Card.any)

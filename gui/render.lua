@@ -41,8 +41,10 @@ end
 ---
 function Render:Text(str)
   -- TODO change
+  love.graphics.setColor(255, 0, 0)
   love.graphics.setFont(Render.font)
   love.graphics.print(str, P.gui_text.x, P.gui_text.y)
+  resetColors()
 
 end
 

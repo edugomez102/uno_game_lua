@@ -4,9 +4,9 @@ require("modules.table_")
 
 local players = {
 	Player.new({name = "P1", human = true}),
-	Player.new({name = "P2", human = false}),
-	Player.new({name = "P3", human = false}),
-	Player.new({name = "P4", human = false}),
+	Player.new({name = "P2", human = true}),
+	Player.new({name = "P3", human = true}),
+	Player.new({name = "P4", human = true}),
 }
 
 local game = Game.new({sort_cards = true})
@@ -23,12 +23,11 @@ end
 function love.load()
 	love.window.setMode(1280, 720)
   game.start()
-
 end
 
-function love.update()
-  game.update()
-  -- game.play()
+function love.update(dt)
+  game.play()
+  game.input()
 end
 
 function love.draw()

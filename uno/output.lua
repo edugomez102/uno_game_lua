@@ -47,9 +47,9 @@ end
 ---@param player table Player
 ---@param card_to_play table Card
 function Output.playedCard(player, card_to_play)
-	if not Output.active then return end
-	io.write(player.name .. " played card: ")
-	card_to_play.print()
+	-- if not Output.active then return end
+	-- card_to_play.print()
+  return player.name .. " played card: " .. card_to_play.__tostring()
 end
 
 ---Print changed color

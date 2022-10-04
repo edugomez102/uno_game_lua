@@ -18,7 +18,6 @@ function Game.new(o)
 	-------------------------------------------------------------------------------
 	-- Private members
 	-------------------------------------------------------------------------------
-  local game_state = {}
 	local _player_list = {}
 	local _deck = Deck.generateDeck()
 	local _current_card = {}
@@ -28,7 +27,8 @@ function Game.new(o)
 		index = 1,
 		dir   = true
 	}
-  local render_text = ""
+  -- text to render
+  local _text = "Game starts!"
 
 	-------------------------------------------------------------------------------
 	-- Private functions
@@ -67,11 +67,13 @@ function Game.new(o)
 	---
 	local function changeNextCardColor()
 		local player = _player_list[_turn.index]
+    print("changecolort")
 
-		if player.isHuman() then Card.showColors() end
+		-- if player.isHuman() then Card.showColors() end
 		local color = Card.card_colors[player.chooseColor(_current_card)]
-		_current_card = Card.new({number = "any", color = color})
-		Output.colorChange(player, color)
+    -- _current_card = Card.getAnyByColor(color)
+
+		-- Output.colorChange(player, color)
 	end
 
 	---Action cards behaviour
@@ -162,7 +164,10 @@ function Game.new(o)
 			end
 			_current_card = card_to_play
 			_player_list[_turn.index].removeCard(play_move)
+
+      -- TODO create state 
 			checkActionCard(_current_card)
+
 			-- TODO move to Game.play ?
 			if checkLastCard() then return end
 			incrementTurn()
@@ -218,28 +223,40 @@ function Game.new(o)
 	---
 	function self.play()
 		local player = _player_list[_turn.index]
+    Input.max_select = player.getCardNumber()
 
-		if player.isHuman() then
-      if self.sort_cards then player.sortCards() end
-			Output.playerTurn(player, _current_card)
-		end
+    -- Bug when sortCards called inside loop
+		-- if player.isHuman() then
+    --   if self.sort_cards then player.sortCards() end
+		-- 	-- Output.playerTurn(player, _current_card)
+		-- end
 
 		local play_move = player.chooseCard(_current_card)
-		if play_move == 0 then
-			takeOrPass()
-		else
-			local card_to_play = player.getCard(play_move)
-			Output.playedCard(player, card_to_play)
-			playCard(card_to_play, play_move)
-		end
+    if play_move then
+      if play_move == 0 then
+        takeOrPass()
+      else
+        local card_to_play = player.getCard(play_move)
+        _text = Output.playedCard(player, card_to_play)
+        playCard(card_to_play, play_move)
+      end
+      Input.select = nil
+    end
 
 		if table.empty(_deck) then refillDeck() end
-
-		Output.separator()
+		-- Output.separator()
 	end
 
-  function self.update()
+  function self.input()
     Input.update()
+
+    -- TODO delete
+    function love.keypressed(k)
+      if k == "n" then
+        incrementTurn()
+      end
+    end
+
   end
 
 	function self.draw()
@@ -253,11 +270,14 @@ function Game.new(o)
 
     Render.currentCard(_current_card)
 
-    Render.selectCards(player.getCards())
+    -- if player.isHuman() then
+      Render.selectCards(player.getCards())
+    -- end
+
     -- Render.selectCards(_deck)
     -- Render.selectCards(Card.any)
 
-    Render:Text("Hola")
+    Render:Text(_text)
 
 	end
 

@@ -1,4 +1,4 @@
-local Input = require("modules.input")
+local Input = require("gui.input")
 local AI    = require("uno.ai")
 
 ---
@@ -76,7 +76,7 @@ function Player.new(o)
 	---@return integer index of chosen card
 	function self.chooseCard(current_card)
 		if _human then
-			return Input.readNumber(#_cards)
+			return Input.select
 		else
 			return AI.chooseCard(_cards, current_card)
 		end
@@ -85,7 +85,7 @@ function Player.new(o)
 	---@return number index of chosen card
 	function self.chooseColor(current_card)
 		if _human then
-			return Input.readNumber(4)
+			return Input.select
 		else
 			return AI.chooseColor(_cards, current_card)
 		end

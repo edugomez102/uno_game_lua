@@ -37,4 +37,6 @@ function Input.update()
   end
 end
 
+function Input.reset() Input.select = nil end
+
 return Input

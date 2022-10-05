@@ -76,6 +76,9 @@ function Game.new(o)
     if self.sort_cards then player.sortCards() end
 		_turn.index = getNextTurn(_turn.index)
     player.has_drawn = false
+
+    -- TODO check
+    love.timer.sleep(0.5)
 	end
 
 	---Action cards behaviour
@@ -115,22 +118,6 @@ function Game.new(o)
       if string.find(card.number, "wild") then return true end
 		end
     return false
-	end
-
-	---Checks if player has no cards so it has won the game
-	---
-	---@return boolean true if the game ends
-	local function checkLastCard()
-		local player = _player_list[_turn.index]
-		if player.getCardNumber() == 0 then
-			_has_ended = true
-			Output.playerWon(player.name)
-			Output.playersCardsLeft(_player_list)
-      love.event.quit()
-			return true
-		else
-			return false
-		end
 	end
 
 	---Shuffle _played_pile and insert cards in empty deck
@@ -175,8 +162,6 @@ function Game.new(o)
         incrementTurn()
       end
 
-      -- TODO move to Game.play ?
-      if checkLastCard() then return end
 		else
 			Output.cantPlay()
 		end
@@ -212,7 +197,7 @@ function Game.new(o)
             _text = Output.playedCard(player, card_to_play)
             playCard(card_to_play, play_move)
           end
-          Input.select = nil
+          Input.reset()
       end
     end
     },
@@ -230,7 +215,7 @@ function Game.new(o)
           nextStateCard()
           incrementTurn()
         end
-        Input.select = nil
+        Input.reset()
       end
     }
   }
@@ -270,6 +255,7 @@ function Game.new(o)
 	---Main loop of the game
 	---
 	function self.play()
+    local player = currentPlayer()
 
     -- Bug when sortCards called inside loop
 		-- if player.isHuman() then
@@ -279,7 +265,13 @@ function Game.new(o)
 
     choose_states[_state].play()
 		if table.empty(_deck) then refillDeck() end
-
+    if Rules.checkLastCard(currentPlayer()) then
+      _has_ended = true
+      --TODO final game screen
+      Output.playerWon(player.name)
+      Output.playersCardsLeft(_player_list)
+      love.event.quit()
+    end
 	end
 
   function self.input()
@@ -297,7 +289,6 @@ function Game.new(o)
 
 	function self.draw()
     local player = _player_list[_turn.index]
-    -- player.sortCards()
 
     Render:background()
     Render:playingDirection(_turn.dir)

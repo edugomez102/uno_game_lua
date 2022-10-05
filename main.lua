@@ -4,9 +4,9 @@ require("modules.table_")
 
 local players = {
 	Player.new({name = "P1", human = true}),
-	Player.new({name = "P2", human = true}),
-	Player.new({name = "P3", human = true}),
-	Player.new({name = "P4", human = true}),
+	Player.new({name = "P2", human = false}),
+	Player.new({name = "P3", human = false}),
+	Player.new({name = "P4", human = false}),
 }
 
 local game = Game.new({sort_cards = true})
@@ -26,8 +26,8 @@ function love.load()
 end
 
 function love.update(dt)
-  game.play()
   game.input()
+  game.play()
 end
 
 function love.draw()

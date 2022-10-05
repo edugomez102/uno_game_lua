@@ -29,10 +29,24 @@ function Game.new(o)
 	}
   -- text to render
   local _text = "Game starts!"
+  local _state = "card"
 
 	-------------------------------------------------------------------------------
 	-- Private functions
 	-------------------------------------------------------------------------------
+
+  ---Get current turn player
+  ---
+  ---@return table player
+  local function currentPlayer() return _player_list[_turn.index] end
+
+  ---States
+
+  ---Let player choose next color to play
+  local function nextStateCard()  _state = "card"  end
+
+  ---Let player choose a card to play
+  local function nextStateColor() _state = "color" end
 
 	---Get index of next player
 	---@param turn_index integer curent turn index
@@ -58,22 +72,10 @@ function Game.new(o)
 	---
 	---and set has_drawn false for next turn player
 	local function incrementTurn()
+    local player = currentPlayer()
+    if self.sort_cards then player.sortCards() end
 		_turn.index = getNextTurn(_turn.index)
-		_player_list[_turn.index].has_drawn = false
-	end
-
-	---
-	---Let player choose next color to play
-	---
-	local function changeNextCardColor()
-		local player = _player_list[_turn.index]
-    print("changecolort")
-
-		-- if player.isHuman() then Card.showColors() end
-		local color = Card.card_colors[player.chooseColor(_current_card)]
-    -- _current_card = Card.getAnyByColor(color)
-
-		-- Output.colorChange(player, color)
+    player.has_drawn = false
 	end
 
 	---Action cards behaviour
@@ -93,23 +95,26 @@ function Game.new(o)
 							end,
 							---Let the current player choose color and make the next player
 							---draw four cards
-		["wild draw 4"] =   function()
-								changeNextCardColor()
+		["wild draw 4"] = function()
+								nextStateColor()
 								local next_player = _player_list[getNextTurn(_turn.index)]
 								for _ = 1, 4 do
 									next_player.takeCard(_deck)
 								end
 							end,
-		["wild"] =  		changeNextCardColor
+		["wild"] =  		  nextStateColor
 	}
 
 	---Checks if played card is an action card and calls its function
 	---
 	---@param card table Card to check
+  ---@return boolean true if action card requires player to change color
 	local function checkActionCard(card)
 		if table.has_key(_action_cards, card.number) then
 			_action_cards[card.number](_turn, _player_list[_turn.index])
+      if string.find(card.number, "wild") then return true end
 		end
+    return false
 	end
 
 	---Checks if player has no cards so it has won the game
@@ -121,6 +126,7 @@ function Game.new(o)
 			_has_ended = true
 			Output.playerWon(player.name)
 			Output.playersCardsLeft(_player_list)
+      love.event.quit()
 			return true
 		else
 			return false
@@ -165,12 +171,12 @@ function Game.new(o)
 			_current_card = card_to_play
 			_player_list[_turn.index].removeCard(play_move)
 
-      -- TODO create state 
-			checkActionCard(_current_card)
+			if not checkActionCard(_current_card) then
+        incrementTurn()
+      end
 
-			-- TODO move to Game.play ?
-			if checkLastCard() then return end
-			incrementTurn()
+      -- TODO move to Game.play ?
+      if checkLastCard() then return end
 		else
 			Output.cantPlay()
 		end
@@ -186,6 +192,48 @@ function Game.new(o)
 			_current_card = table.remove(_deck, 1)
 		end
 	end
+
+  ---Simple state platrol to manage cards layout when playing card or choosing color
+  ---
+  local choose_states = {
+    card = {
+      render = function() return currentPlayer().getCards() end,
+      input = function()
+        Input.max_select = currentPlayer().getCardNumber()
+      end,
+      play = function()
+        local player = currentPlayer()
+        local play_move = player.chooseCard(_current_card)
+        if play_move then
+          if play_move == 0 then
+            takeOrPass()
+          else
+            local card_to_play = player.getCard(play_move)
+            _text = Output.playedCard(player, card_to_play)
+            playCard(card_to_play, play_move)
+          end
+          Input.select = nil
+      end
+    end
+    },
+    color = {
+      render = function() return Card.any end,
+      input = function()
+        Input.max_select = #Card.any
+      end,
+      play = function()
+        local color_index = currentPlayer().chooseColor(_current_card)
+        if color_index then
+          local color = Card.card_colors[color_index]
+          _current_card = Card.getAnyByColor(color)
+          -- Output.colorChange(player, color)
+          nextStateCard()
+          incrementTurn()
+        end
+        Input.select = nil
+      end
+    }
+  }
 
 	-------------------------------------------------------------------------------
 	-- Public functions
@@ -212,7 +260,7 @@ function Game.new(o)
 			_player_list[i].dealCards(_deck)
 		end
 		setInitialCard()
-
+    if self.sort_cards then currentPlayer().sortCards() end
 		-- for i = 1, #_deck do
 		-- 	io.write(_deck[i].img .. "    ")
 		-- 	_deck[i].print()
@@ -222,8 +270,6 @@ function Game.new(o)
 	---Main loop of the game
 	---
 	function self.play()
-		local player = _player_list[_turn.index]
-    Input.max_select = player.getCardNumber()
 
     -- Bug when sortCards called inside loop
 		-- if player.isHuman() then
@@ -231,23 +277,13 @@ function Game.new(o)
 		-- 	-- Output.playerTurn(player, _current_card)
 		-- end
 
-		local play_move = player.chooseCard(_current_card)
-    if play_move then
-      if play_move == 0 then
-        takeOrPass()
-      else
-        local card_to_play = player.getCard(play_move)
-        _text = Output.playedCard(player, card_to_play)
-        playCard(card_to_play, play_move)
-      end
-      Input.select = nil
-    end
-
+    choose_states[_state].play()
 		if table.empty(_deck) then refillDeck() end
-		-- Output.separator()
+
 	end
 
   function self.input()
+    choose_states[_state].input()
     Input.update()
 
     -- TODO delete
@@ -270,10 +306,11 @@ function Game.new(o)
 
     Render.currentCard(_current_card)
 
-    -- if player.isHuman() then
-      Render.selectCards(player.getCards())
-    -- end
+    if player.isHuman() then
+      Render.selectCards(choose_states[_state].render())
+    end
 
+    -- Render.selectCards(player.getCards())
     -- Render.selectCards(_deck)
     -- Render.selectCards(Card.any)
 

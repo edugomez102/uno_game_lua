@@ -78,7 +78,7 @@ function Game.new(o)
     player.has_drawn = false
 
     -- TODO check
-    love.timer.sleep(0.5)
+    if not player.isHuman() then love.timer.sleep(0.5) end
 	end
 
 	---Action cards behaviour

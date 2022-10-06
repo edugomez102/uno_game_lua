@@ -68,17 +68,18 @@ function Game.new(o)
 	end
 
 	---
-	---Update _turn.index to the next playing player on the list
+	---Update _turn.index to the next playing player on the list.
+  ---Set has_drawn false for next turn player.
+  ---Sleep a bit to see what other players do.
+  ---Sort cards of next player.
 	---
-	---and set has_drawn false for next turn player
 	local function incrementTurn()
     local player = currentPlayer()
-    if self.sort_cards then player.sortCards() end
-		_turn.index = getNextTurn(_turn.index)
+    _turn.index = getNextTurn(_turn.index)
     player.has_drawn = false
-
-    -- TODO check
     if not player.isHuman() then love.timer.sleep(0.5) end
+    local next_player = currentPlayer()
+    if self.sort_cards then next_player.sortCards() end
 	end
 
 	---Action cards behaviour

@@ -4,6 +4,8 @@ local Render = {
   bg_img     = love.graphics.newImage("img/uno_layout.png"),
   arrow_img  = love.graphics.newImage("img/arrow.png"),
   player_img = love.graphics.newImage("img/person_1.png"),
+  card_back  = love.graphics.newImage("img/back.png"),
+  pass_turn  = love.graphics.newImage("img/pass.png"),
   font       = love.graphics.newFont(20)
 }
 
@@ -63,6 +65,8 @@ function Render:players(players)
   end
 end
 
+---Renders arrow with game direction
+---
 function Render:turn(index)
   local w_h = self.player_img:getWidth()
   local xpos = P.player_list.x + (index - 1) *
@@ -71,6 +75,16 @@ function Render:turn(index)
   love.graphics.setColor(255, 0, 0)
   love.graphics.rectangle( "fill", xpos, P.player_list.y, w_h, w_h)
   resetColors()
+end
+
+---Renders deck to take a card or icon to pass turn
+---
+function Render:deckOrPass(has_drawn)
+  if not has_drawn then
+    love.graphics.draw(self.card_back, P.deck.x, P.deck.y)
+  else
+    love.graphics.draw(self.pass_turn, P.deck.x, P.deck.y)
+  end
 end
 
 -------------------------------------------------------------------------------

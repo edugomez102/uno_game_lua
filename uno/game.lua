@@ -291,6 +291,7 @@ function Game.new(o)
     Render:playingDirection(_turn.dir)
     Render:turn(_turn.index)
     Render:players(_player_list)
+    Render:deckOrPass(player.has_drawn)
 
     Render.currentCard(_current_card)
 

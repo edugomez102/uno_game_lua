@@ -1,7 +1,8 @@
-local Deck  = require("uno.deck")
-local Card  = require("uno.card")
-local Rules = require("uno.rules")
+local Deck   = require("uno.deck")
+local Card   = require("uno.card")
+local Rules  = require("uno.rules")
 local Output = require("uno.output")
+local Utils  = require("uno.game_utils")
 local Render = require("gui.render")
 local Input  = require("gui.input")
 
@@ -48,26 +49,6 @@ function Game.new(o)
   ---Let player choose a card to play
   local function nextStateColor() _state = "color" end
 
-	---Get index of next player
-	---@param turn_index integer curent turn index
-	local function getNextTurn(turn_index)
-		if _turn.dir then
-			if turn_index == #_player_list then
-				turn_index = 1
-			else
-				turn_index = turn_index + 1
-			end
-		else
-			if turn_index == 1 then
-				turn_index = #_player_list
-			else
-				turn_index = turn_index - 1
-			end
-		end
-		return turn_index
-	end
-
-	---
 	---Update _turn.index to the next playing player on the list.
   ---Set has_drawn false for next turn player.
   ---Sleep a bit to see what other players do.
@@ -75,14 +56,14 @@ function Game.new(o)
 	---
 	local function incrementTurn()
     local player = currentPlayer()
-    _turn.index = getNextTurn(_turn.index)
+    _turn.index = Utils.getNextTurn(_turn, _player_list)
     player.has_drawn = false
     if not player.isHuman() then love.timer.sleep(0.5) end
     local next_player = currentPlayer()
     if self.sort_cards then next_player.sortCards() end
 	end
 
-	---Action cards behaviour
+	---Action cards behaviour in a pretty ugly table :)
 	---
 	local _action_cards =
 	{
@@ -93,7 +74,8 @@ function Game.new(o)
 							end,
 							---Makes the next player draw two cards
 		["draw two"] =  	function()
-								local next_player = _player_list[getNextTurn(_turn.index)]
+								local next_player =
+                  _player_list[Utils.getNextTurn(_turn, _player_list)]
 								next_player.takeCard(_deck)
 								next_player.takeCard(_deck)
 							end,
@@ -101,34 +83,14 @@ function Game.new(o)
 							---draw four cards
 		["wild draw 4"] = function()
 								nextStateColor()
-								local next_player = _player_list[getNextTurn(_turn.index)]
+								local next_player =
+                  _player_list[Utils.getNextTurn(_turn, _player_list)]
 								for _ = 1, 4 do
 									next_player.takeCard(_deck)
 								end
 							end,
 		["wild"] =  		  nextStateColor
 	}
-
-	---Checks if played card is an action card and calls its function
-	---
-	---@param card table Card to check
-  ---@return boolean true if action card requires player to change color
-	local function checkActionCard(card)
-		if table.has_key(_action_cards, card.number) then
-			_action_cards[card.number](_turn, _player_list[_turn.index])
-      if string.find(card.number, "wild") then return true end
-		end
-    return false
-	end
-
-	---Shuffle _played_pile and insert cards in empty deck
-	---
-	local function refillDeck()
-		table.shuffle(_played_pile)
-		for _ = 1, #_played_pile do
-			table.insert(_deck, table.remove(_played_pile, 1))
-		end
-	end
 
 	---Take or pass card. if player has already taken a card then pass
 	---
@@ -159,7 +121,8 @@ function Game.new(o)
 			_current_card = card_to_play
 			_player_list[_turn.index].removeCard(play_move)
 
-			if not checkActionCard(_current_card) then
+			if not Rules.checkActionCard(
+        _action_cards, _current_card, _turn, _player_list) then
         incrementTurn()
       end
 
@@ -178,6 +141,24 @@ function Game.new(o)
 			_current_card = table.remove(_deck, 1)
 		end
 	end
+
+  ---Restarts all default values to start a new game
+  ---
+  local function restart()
+    _deck = Deck.generateDeck()
+    _played_pile = {}
+    _has_ended = false
+    _turn = {
+      index = 1,
+      dir   = true
+    }
+    _text = "Game starts!"
+    _state = "card"
+    for i = 1, #_player_list do
+      _player_list[i].reset()
+    end
+    self.start()
+  end
 
   ---Simple state platrol to manage cards layout when playing card or choosing color
   ---
@@ -221,22 +202,6 @@ function Game.new(o)
     }
   }
 
-  local function restart()
-    _deck = Deck.generateDeck()
-    _played_pile = {}
-    _has_ended = false
-    _turn = {
-      index = 1,
-      dir   = true
-    }
-    _text = "Game starts!"
-    _state = "card"
-    for i = 1, #_player_list do
-      _player_list[i].reset()
-    end
-    self.start()
-  end
-
 	-------------------------------------------------------------------------------
 	-- Public functions
 	-------------------------------------------------------------------------------
@@ -267,7 +232,6 @@ function Game.new(o)
 		end
 		setInitialCard()
     if self.sort_cards then currentPlayer().sortCards() end
-
 	end
 
 	---Main loop of the game
@@ -276,7 +240,7 @@ function Game.new(o)
     local player = currentPlayer()
     choose_states[_state].play()
 
-		if table.empty(_deck) then refillDeck() end
+		if table.empty(_deck) then Utils.refillDeck(_played_pile, _deck) end
 
     if Rules.checkLastCard(currentPlayer()) then
       _has_ended = true
@@ -293,37 +257,18 @@ function Game.new(o)
 
     -- TODO delete
     function love.keypressed(k)
-      if k == "n" then
-        incrementTurn()
-      end
-      if k == "r" then
-        restart()
-      end
+      if k == "n" then incrementTurn() end
+      if k == "r" then restart() end
     end
-
   end
 
 	function self.draw()
     local player = _player_list[_turn.index]
-
-    Render:background()
-    Render:playingDirection(_turn.dir)
-    Render:turn(_turn.index)
-    Render:players(_player_list)
-    Render:deckOrPass(player.has_drawn, player.isHuman())
-
-    Render.currentCard(_current_card)
+    Render.fixed(_turn, _player_list, _current_card, _text)
 
     if player.isHuman() then
       Render.selectCards(choose_states[_state].render())
     end
-
-    -- Render.selectCards(player.getCards())
-    -- Render.selectCards(_deck)
-    -- Render.selectCards(Card.any)
-
-    Render:Text(_text)
-
 	end
 
 	return self

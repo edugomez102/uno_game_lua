@@ -152,4 +152,23 @@ function Render.selectCards(cards)
   end
 end
 
+---Elements to be renderd always
+---
+---@param turn table containing game turn info
+---@param player_list table list of players
+---@param current_card table
+---@param text string rendering game info
+function Render.fixed(turn, player_list, current_card, text)
+  -- TODO make private funcs
+  local player = player_list[turn.index]
+  Render:background()
+  Render:playingDirection(turn.dir)
+  Render:turn(turn.index)
+  Render:players(player_list)
+  Render:deckOrPass(player.has_drawn, player.isHuman())
+  Render:Text(text)
+
+  Render.currentCard(current_card)
+end
+
 return Render

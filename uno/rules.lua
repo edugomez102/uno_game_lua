@@ -36,5 +36,20 @@ function Rules.checkLastCard(player)
   end
 end
 
+---Checks if played card is an action card and calls its function
+---
+---@param card table Card to check
+---@param action_cards table list of actions cards and their functions
+---@param turn table containing game turn info
+---@param player_list table list of players
+---@return boolean true if action card requires player to change color
+function Rules.checkActionCard(action_cards, card, turn, player_list)
+  if table.has_key(action_cards, card.number) then
+    action_cards[card.number](turn, player_list[turn.index])
+    if string.find(card.number, "wild") then return true end
+  end
+  return false
+end
+
 return Rules
 

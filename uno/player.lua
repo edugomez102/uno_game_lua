@@ -35,6 +35,11 @@ function Player.new(o)
     end)
   end
 
+  function self.reset()
+    self.has_drawn = false
+    _cards = {}
+  end
+
 	function self.isHuman() return _human end
 
 	---Deal cards to player

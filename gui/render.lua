@@ -92,10 +92,10 @@ end
 ---Renders deck to take a card or icon to pass turn
 ---
 function Render:deckOrPass(has_drawn, is_human)
-  if not has_drawn then
-    love.graphics.draw(self.card_back, P.deck.x, P.deck.y)
-  else
+  if has_drawn and is_human then
     love.graphics.draw(self.pass_turn, P.deck.x, P.deck.y)
+  else
+    love.graphics.draw(self.card_back, P.deck.x, P.deck.y)
   end
   if is_human then
     hover(P.deck.x, P.deck.y, Card.w, Card.h)

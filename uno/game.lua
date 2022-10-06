@@ -221,6 +221,22 @@ function Game.new(o)
     }
   }
 
+  local function restart()
+    _deck = Deck.generateDeck()
+    _played_pile = {}
+    _has_ended = false
+    _turn = {
+      index = 1,
+      dir   = true
+    }
+    _text = "Game starts!"
+    _state = "card"
+    for i = 1, #_player_list do
+      _player_list[i].reset()
+    end
+    self.start()
+  end
+
 	-------------------------------------------------------------------------------
 	-- Public functions
 	-------------------------------------------------------------------------------
@@ -279,6 +295,9 @@ function Game.new(o)
     function love.keypressed(k)
       if k == "n" then
         incrementTurn()
+      end
+      if k == "r" then
+        restart()
       end
     end
 

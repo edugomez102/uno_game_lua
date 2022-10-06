@@ -132,10 +132,8 @@ local function renderSmallCards(cards)
 
     love.graphics.scale(s, s)
     cards[i].draw(x , y)
-
-    --  TODO fix
-    -- hover(x / s , y / s, Card.w , Card.h )
     love.graphics.pop()
+    hover(x * s, y * s, Card.w * s, Card.h * s)
   end
 end
 

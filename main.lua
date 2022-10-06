@@ -16,10 +16,6 @@ for i = 1, #players do
 end
 
 
--- while not game.hasEnded() do
--- 	game.play()
--- end
-
 function love.load()
 	love.window.setMode(1280, 720)
   game.start()
@@ -32,6 +28,5 @@ end
 
 function love.draw()
 	game.draw()
-
 end
 

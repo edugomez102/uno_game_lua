@@ -136,10 +136,10 @@ function Game.new(o)
 		local player = _player_list[_turn.index] -- Player
 		if not player.has_drawn then
       local card = player.takeCard(_deck)
-			Output.playerDraws(player, card)
+			_text = Output.playerDraws(player, card)
 			player.has_drawn = true
 		else
-			Output.turnPass(player)
+			_text = Output.turnPass(player)
 			incrementTurn()
 		end
 	end
@@ -164,7 +164,7 @@ function Game.new(o)
       end
 
 		else
-			Output.cantPlay()
+			_text = Output.cantPlay(card_to_play.__tostring())
 		end
 	end
 
@@ -212,7 +212,7 @@ function Game.new(o)
         if color_index then
           local color = Card.card_colors[color_index]
           _current_card = Card.getAnyByColor(color)
-          -- Output.colorChange(player, color)
+          _text = Output.colorChange(currentPlayer(), color)
           nextStateCard()
           incrementTurn()
         end
@@ -236,36 +236,32 @@ function Game.new(o)
 	function self.hasEnded() return _has_ended end
 
 	---Deal cards to all players and sets initial card on _current_card
-	---
+	---Check if number of players is correct
+  ---Sort cards of fist player
+  ---
 	function self.start()
 		if #_player_list > 10 or #_player_list < 2 then
 			Output.wrongNumberPlayers()
-			_has_ended = true
+			_has_ended = true; love.event.quit()
+      return
 		end
+
 		for i = 1, #_player_list do
 			_player_list[i].dealCards(_deck)
 		end
 		setInitialCard()
     if self.sort_cards then currentPlayer().sortCards() end
-		-- for i = 1, #_deck do
-		-- 	io.write(_deck[i].img .. "    ")
-		-- 	_deck[i].print()
-		-- end
+
 	end
 
 	---Main loop of the game
 	---
 	function self.play()
     local player = currentPlayer()
-
-    -- Bug when sortCards called inside loop
-		-- if player.isHuman() then
-    --   if self.sort_cards then player.sortCards() end
-		-- 	-- Output.playerTurn(player, _current_card)
-		-- end
-
     choose_states[_state].play()
+
 		if table.empty(_deck) then refillDeck() end
+
     if Rules.checkLastCard(currentPlayer()) then
       _has_ended = true
       --TODO final game screen

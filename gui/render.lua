@@ -1,4 +1,5 @@
 local P     = require("gui.positions")
+local Card  = require('uno.card')
 
 local Render = {
   bg_img     = love.graphics.newImage("img/uno_layout.png"),
@@ -11,6 +12,17 @@ local Render = {
 
 local function resetColors()
   love.graphics.setColor(255, 255, 255)
+end
+
+-- adds visual hover to hovered area with mouse
+local function hover(xpos, ypos, w, h)
+  local mx, my = love.mouse.getPosition()
+  if mx > xpos and mx < xpos + w and
+     my > ypos and my < ypos + h then
+     love.graphics.setColor(0, 0, 0, 0.25)
+     love.graphics.rectangle("fill", xpos, ypos, w, h)
+     resetColors()
+   end
 end
 
 -------------------------------------------------------------------------------
@@ -79,11 +91,14 @@ end
 
 ---Renders deck to take a card or icon to pass turn
 ---
-function Render:deckOrPass(has_drawn)
+function Render:deckOrPass(has_drawn, is_human)
   if not has_drawn then
     love.graphics.draw(self.card_back, P.deck.x, P.deck.y)
   else
     love.graphics.draw(self.pass_turn, P.deck.x, P.deck.y)
+  end
+  if is_human then
+    hover(P.deck.x, P.deck.y, Card.w, Card.h)
   end
 end
 
@@ -117,6 +132,9 @@ local function renderSmallCards(cards)
 
     love.graphics.scale(s, s)
     cards[i].draw(x , y)
+
+    --  TODO fix
+    -- hover(x / s , y / s, Card.w , Card.h )
     love.graphics.pop()
   end
 end
@@ -127,7 +145,9 @@ end
 function Render.selectCards(cards)
   if #cards < 15 then
     for i = 1, #cards do
-      cards[i].draw(P.card_list.x + (i - 1) * (P.card_list.margin), P.card_list.y)
+      local x, y = P.card_list.x + (i - 1) * (P.card_list.margin), P.card_list.y
+      cards[i].draw(x, y)
+      hover(x, y, Card.w, Card.h )
     end
   else
     renderSmallCards(cards)

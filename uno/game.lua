@@ -237,7 +237,7 @@ function Game.new(o)
 
 	---Deal cards to all players and sets initial card on _current_card
 	---Check if number of players is correct
-  ---Sort cards of fist player
+  ---Sort cards of fist playeru
   ---
 	function self.start()
 		if #_player_list > 10 or #_player_list < 2 then
@@ -291,7 +291,7 @@ function Game.new(o)
     Render:playingDirection(_turn.dir)
     Render:turn(_turn.index)
     Render:players(_player_list)
-    Render:deckOrPass(player.has_drawn)
+    Render:deckOrPass(player.has_drawn, player.isHuman())
 
     Render.currentCard(_current_card)
 

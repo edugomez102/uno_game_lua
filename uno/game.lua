@@ -162,7 +162,10 @@ function Game.new(o)
 
   ---Simple state platrol to manage cards layout when playing card or choosing color
   ---
-  local choose_states = {
+  ---@function render number of cards to be rendered in layout
+  ---@function input sets Input.max_select to update input
+  ---@function play logic of choose state
+   local choose_states = {
     card = {
       render = function() return currentPlayer().getCards() end,
       input = function()
@@ -199,7 +202,12 @@ function Game.new(o)
         end
         Input.reset()
       end
-    }
+    },
+    -- game_end = {
+    --   render = function () end,
+    --   input = function() end,
+    --   play = function() end
+    -- }
   }
 
 	-------------------------------------------------------------------------------
@@ -247,7 +255,7 @@ function Game.new(o)
       --TODO final game screen
       Output.playerWon(player.name)
       Output.playersCardsLeft(_player_list)
-      love.event.quit()
+      -- love.event.quit()
     end
 	end
 
@@ -267,7 +275,7 @@ function Game.new(o)
     Render.fixed(_turn, _player_list, _current_card, _text)
 
     if player.isHuman() then
-      Render.selectCards(choose_states[_state].render())
+      Render.selectCards(choose_states[_state].render(), _current_card)
     end
 	end
 

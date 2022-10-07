@@ -1,9 +1,10 @@
 local P     = require("gui.positions")
 local Card  = require('uno.card')
+local Rules = require("uno.rules")
 
 local Render = {
-  bg_img     = love.graphics.newImage("img/uno_layout.png"),
-  arrow_img  = love.graphics.newImage("img/arrow.png"),
+  bg_img     = love.graphics.newImage("img/uno_layout2.png"),
+  arrow_img  = love.graphics.newImage("img/red_arrow.png"),
   player_img = love.graphics.newImage("img/person_1.png"),
   card_back  = love.graphics.newImage("img/back.png"),
   pass_turn  = love.graphics.newImage("img/pass.png"),
@@ -14,12 +15,24 @@ local function resetColors()
   love.graphics.setColor(255, 255, 255)
 end
 
+local function getHoverColor(card, current_card)
+  if card and current_card then
+    if Rules.checkNumberAndColor(card, current_card) then
+      return {0, 255, 0, 0.3}
+    else
+      return {255, 0, 0, 0.3}
+    end
+  else
+    return {0, 0, 0, 0.3}
+  end
+end
+
 -- adds visual hover to hovered area with mouse
-local function hover(xpos, ypos, w, h)
+local function hover(xpos, ypos, w, h, colors)
   local mx, my = love.mouse.getPosition()
   if mx > xpos and mx < xpos + w and
      my > ypos and my < ypos + h then
-     love.graphics.setColor(0, 0, 0, 0.25)
+     love.graphics.setColor(colors)
      love.graphics.rectangle("fill", xpos, ypos, w, h)
      resetColors()
    end
@@ -85,6 +98,7 @@ function Render:turn(index)
   (self.player_img:getWidth() + P.player_list.margin)
 
   love.graphics.setColor(255, 0, 0)
+  -- love.graphics.setColor(248, 218, 39)
   love.graphics.rectangle( "fill", xpos, P.player_list.y, w_h, w_h)
   resetColors()
 end
@@ -98,7 +112,7 @@ function Render:deckOrPass(has_drawn, is_human)
     love.graphics.draw(self.card_back, P.deck.x, P.deck.y)
   end
   if is_human then
-    hover(P.deck.x, P.deck.y, Card.w, Card.h)
+    hover(P.deck.x, P.deck.y, Card.w, Card.h, getHoverColor())
   end
 end
 
@@ -117,7 +131,7 @@ function Render.currentCard(card)
   love.graphics.pop()
 end
 
-local function renderSmallCards(cards)
+local function renderSmallCards(cards, current_card)
   for i = 1, #cards do
     love.graphics.push()
     local s = 0.75
@@ -133,22 +147,23 @@ local function renderSmallCards(cards)
     love.graphics.scale(s, s)
     cards[i].draw(x , y)
     love.graphics.pop()
-    hover(x * s, y * s, Card.w * s, Card.h * s)
+    hover(x * s, y * s, Card.w * s, Card.h * s,
+      getHoverColor(cards[i], current_card))
   end
 end
 
 ---Renders cards of player in layout
 ---
 ---@param cards table
-function Render.selectCards(cards)
+function Render.selectCards(cards, current_card)
   if #cards < 15 then
     for i = 1, #cards do
       local x, y = P.card_list.x + (i - 1) * (P.card_list.margin), P.card_list.y
       cards[i].draw(x, y)
-      hover(x, y, Card.w, Card.h )
+      hover(x, y, Card.w, Card.h, getHoverColor(cards[i], current_card))
     end
   else
-    renderSmallCards(cards)
+    renderSmallCards(cards, current_card)
   end
 end
 

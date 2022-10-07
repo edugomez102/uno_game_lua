@@ -23,10 +23,13 @@ return {
   gui_text = {
     x = 144, y = 342
   },
-  exit = {
+  restart = {
     x = 1170, y = 29
   },
   deck = {
     x = 732, y = 83
+  },
+  endgame = {
+
   }
 }

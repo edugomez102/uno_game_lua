@@ -69,3 +69,11 @@ function table.max_key(t)
 	end
 	return key
 end
+
+---Returns a copy of a table
+---@param t table to copy
+function table.copy(t)
+  local u = {}
+  for k, v in pairs(t) do u[k] = v end
+  return setmetatable(u, getmetatable(t))
+end

@@ -64,12 +64,13 @@ function Player.new(o)
 		table.remove(_cards, index)
 	end
 
+  -- TODO delete
 	---@param index integer index of cards
 	---@return table Card object
 	function self.getCard(index) return _cards[index] end
 
-  -- TODO delete
-  function self.getCards() return _cards end
+  ---@return table copy of _cards
+  function self.getCards() return table.copy(_cards) end
 
 	-- TODO Delete
 	function self.setCard(card) table.insert(_cards, card) end

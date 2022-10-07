@@ -44,8 +44,9 @@ function Player.new(o)
 
 	---Deal cards to player
 	---@param deck table
-	function self.dealCards(deck)
-		for _ = 1, 7 do
+  ---@param n integer number of cards to deal
+	function self.dealCards(deck, n)
+		for _ = 1, n do
 			table.insert(_cards, table.remove(deck, 1))
 		end
 	end

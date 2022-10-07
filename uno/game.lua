@@ -32,6 +32,9 @@ function Game.new(o)
   local _text = "Game starts!"
   local _state = "card"
 
+  -- TODO delete
+  local initial_cards = 7
+
 	-------------------------------------------------------------------------------
 	-- Private functions
 	-------------------------------------------------------------------------------
@@ -49,6 +52,13 @@ function Game.new(o)
   ---Let player choose a card to play
   local function nextStateColor() _state = "color" end
 
+  ---
+  ---@param fun function
+  ---@param ... any
+  local function whenHumanPlayer(fun, ...)
+    if currentPlayer().isHuman() then fun(...) end
+  end
+
 	---Update _turn.index to the next playing player on the list.
   ---Set has_drawn false for next turn player.
   ---Sleep a bit to see what other players do.
@@ -61,6 +71,7 @@ function Game.new(o)
     if not player.isHuman() then love.timer.sleep(0.5) end
     local next_player = currentPlayer()
     if self.sort_cards then next_player.sortCards() end
+    whenHumanPlayer(function() Input.max_select = #next_player.getCards() end)
 	end
 
 	---Action cards behaviour in a pretty ugly table :)
@@ -113,13 +124,25 @@ function Game.new(o)
 	---@param card_to_play table Card
 	---@param play_move integer index of card in _player_list
 	local function playCard(card_to_play, play_move)
-		if Rules.checkNumber(card_to_play, _current_card) or
-		   Rules.checkColor(card_to_play, _current_card) then
+    local player = currentPlayer()
+    if Rules.checkNumberAndColor(card_to_play, _current_card) then
 			if _current_card.number ~= "any" then
 				table.insert(_played_pile, _current_card)
 			end
 			_current_card = card_to_play
-			_player_list[_turn.index].removeCard(play_move)
+      player.removeCard(play_move)
+
+      if Rules.checkLastCard(player) then
+        _has_ended = true
+        print("end game")
+        _state = "game_end"
+        _text = "game end"
+
+        --TODO final game screen
+        -- Output.playerWon(player.name)
+        -- Output.playersCardsLeft(_player_list)
+        -- love.event.quit()
+      end
 
 			if not Rules.checkActionCard(
         _action_cards, _current_card, _turn, _player_list) then
@@ -160,16 +183,24 @@ function Game.new(o)
     self.start()
   end
 
-  ---Simple state platrol to manage cards layout when playing card or choosing color
+  ---Simple state patrol to manage cards layout when playing card or choosing color
   ---
-  ---@function render number of cards to be rendered in layout
+  ---@function render cards to be rendered in layout
   ---@function input sets Input.max_select to update input
   ---@function play logic of choose state
    local choose_states = {
     card = {
-      render = function() return currentPlayer().getCards() end,
+      render = function()
+        local player = currentPlayer()
+        whenHumanPlayer(Render.selectCards, player.getCards(), _current_card)
+      end,
       input = function()
-        Input.max_select = currentPlayer().getCardNumber()
+        -- return Input.selectCards
+        if Input.max_select < 15 then
+          return Input.selectCards
+        else
+          return Input.selectSmallCards
+        end
       end,
       play = function()
         local player = currentPlayer()
@@ -187,9 +218,11 @@ function Game.new(o)
     end
     },
     color = {
-      render = function() return Card.any end,
+      render = function()
+        whenHumanPlayer(Render.selectCards, Card.any, _current_card)
+      end,
       input = function()
-        Input.max_select = #Card.any
+        return Input.selectSmallCards
       end,
       play = function()
         local color_index = currentPlayer().chooseColor(_current_card)
@@ -203,11 +236,14 @@ function Game.new(o)
         Input.reset()
       end
     },
-    -- game_end = {
-    --   render = function () end,
-    --   input = function() end,
-    --   play = function() end
-    -- }
+    game_end = {
+      render = function()
+      end,
+      input  = function()
+      end,
+      play   = function()
+      end
+    }
   }
 
 	-------------------------------------------------------------------------------
@@ -236,7 +272,7 @@ function Game.new(o)
 		end
 
 		for i = 1, #_player_list do
-			_player_list[i].dealCards(_deck)
+			_player_list[i].dealCards(_deck, initial_cards)
 		end
 		setInitialCard()
     if self.sort_cards then currentPlayer().sortCards() end
@@ -250,18 +286,11 @@ function Game.new(o)
 
 		if table.empty(_deck) then Utils.refillDeck(_played_pile, _deck) end
 
-    if Rules.checkLastCard(currentPlayer()) then
-      _has_ended = true
-      --TODO final game screen
-      Output.playerWon(player.name)
-      Output.playersCardsLeft(_player_list)
-      -- love.event.quit()
-    end
 	end
 
   function self.input()
-    choose_states[_state].input()
-    Input.update()
+    -- choose_states[_state].input()
+    Input.update(choose_states[_state].input())
 
     -- TODO delete
     function love.keypressed(k)
@@ -274,9 +303,11 @@ function Game.new(o)
     local player = _player_list[_turn.index]
     Render.fixed(_turn, _player_list, _current_card, _text)
 
-    if player.isHuman() then
-      Render.selectCards(choose_states[_state].render(), _current_card)
-    end
+    -- if _has_ended then return end
+    choose_states[_state].render()
+    -- if player.isHuman() then
+    --   Render.selectCards(choose_states[_state].render(), _current_card)
+    -- end
 	end
 
 	return self

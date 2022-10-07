@@ -18,15 +18,15 @@ return {
     margin = 33.66
   },
   direction = {
-    x = 30, y = 336
+    x = 48, y = 342
   },
   gui_text = {
-    x = 139, y = 336
+    x = 144, y = 342
   },
   exit = {
     x = 1170, y = 29
   },
   deck = {
-    x = 722, y = 83
+    x = 732, y = 83
   }
 }

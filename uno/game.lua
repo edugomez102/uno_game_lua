@@ -87,8 +87,7 @@ function Game.new(o)
 		["draw two"] =  	function()
 								local next_player =
                   _player_list[Utils.getNextTurn(_turn, _player_list)]
-								next_player.takeCard(_deck)
-								next_player.takeCard(_deck)
+                next_player.dealCards(_deck, 2)
 							end,
 							---Let the current player choose color and make the next player
 							---draw four cards
@@ -96,9 +95,7 @@ function Game.new(o)
 								nextStateColor()
 								local next_player =
                   _player_list[Utils.getNextTurn(_turn, _player_list)]
-								for _ = 1, 4 do
-									next_player.takeCard(_deck)
-								end
+                next_player.dealCards(_deck, 4)
 							end,
 		["wild"] =  		  nextStateColor
 	}
@@ -106,11 +103,12 @@ function Game.new(o)
 	---Take or pass card. if player has already taken a card then pass
 	---
 	local function takeOrPass()
-		local player = _player_list[_turn.index] -- Player
+		local player = currentPlayer()
 		if not player.has_drawn then
       local card = player.takeCard(_deck)
 			_text = Output.playerDraws(player, card)
 			player.has_drawn = true
+      whenHumanPlayer(function() Input.max_select = Input.max_select + 1 end)
 		else
 			_text = Output.turnPass(player)
 			incrementTurn()
@@ -196,6 +194,7 @@ function Game.new(o)
       end,
       input = function()
         -- return Input.selectCards
+        -- whenHumanPlayer(function() Input.max_select = #currentPlayer().getCards() end)
         if Input.max_select < 15 then
           return Input.selectCards
         else
@@ -213,7 +212,6 @@ function Game.new(o)
             _text = Output.playedCard(player, card_to_play)
             playCard(card_to_play, play_move)
           end
-          Input.reset()
       end
     end
     },
@@ -222,7 +220,8 @@ function Game.new(o)
         whenHumanPlayer(Render.selectCards, Card.any, _current_card)
       end,
       input = function()
-        return Input.selectSmallCards
+        -- whenHumanPlayer(function() Input.max_select = #Card.any end)
+        return Input.selectCards
       end,
       play = function()
         local color_index = currentPlayer().chooseColor(_current_card)
@@ -233,7 +232,6 @@ function Game.new(o)
           nextStateCard()
           incrementTurn()
         end
-        Input.reset()
       end
     },
     game_end = {
@@ -281,15 +279,12 @@ function Game.new(o)
 	---Main loop of the game
 	---
 	function self.play()
-    local player = currentPlayer()
     choose_states[_state].play()
 
 		if table.empty(_deck) then Utils.refillDeck(_played_pile, _deck) end
-
 	end
 
   function self.input()
-    -- choose_states[_state].input()
     Input.update(choose_states[_state].input())
 
     -- TODO delete
@@ -305,9 +300,6 @@ function Game.new(o)
 
     -- if _has_ended then return end
     choose_states[_state].render()
-    -- if player.isHuman() then
-    --   Render.selectCards(choose_states[_state].render(), _current_card)
-    -- end
 	end
 
 	return self

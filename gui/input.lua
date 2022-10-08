@@ -19,7 +19,7 @@ end
 
 ---Select index in cards layout
 ---
-function Input.selectCards(x, y)
+function Input.selectCards(x, y, max_select)
   for i = 1, Input.max_select do
     local xpos = P.card_list.x + (i - 1) * P.card_list.margin
     if x > xpos and x < xpos + Card.w and
@@ -33,7 +33,7 @@ end
 
 ---Select index in small cards layout
 ---
-function Input.selectSmallCards(x, y)
+function Input.selectSmallCards(x, y, max_select)
   local s = 0.75
   local xpos, ypos
   for i = 1, Input.max_select do
@@ -54,6 +54,8 @@ function Input.selectSmallCards(x, y)
   end
 end
 
+function Input.reset() Input.select = nil end
+
 function Input.update(input_fun)
   function love.mousepressed(x, y, button, istouch, presses )
     if button == 1 then
@@ -65,8 +67,7 @@ function Input.update(input_fun)
       input_fun(x, y)
     end
   end
+  Input.reset()
 end
-
-function Input.reset() Input.select = nil end
 
 return Input

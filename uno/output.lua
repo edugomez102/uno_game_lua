@@ -13,10 +13,12 @@ end
 ---
 ---@param player_list table
 function Output.playersCardsLeft(player_list)
+  local t = {}
 	for i = 1, #player_list do
-		io.write( player_list[i].name .. " had " ..
-			player_list[i].getCardNumber() .. " cards left\n")
+    t[#t+1] = player_list[i].name .. " had " ..
+			player_list[i].getCardNumber() .. " cards left\n"
 	end
+  return table.concat(t)
 end
 
 ---Prints played card

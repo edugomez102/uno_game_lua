@@ -64,16 +64,8 @@ function Player.new(o)
     table.remove(_cards, index)
   end
 
-  -- TODO delete
-  ---@param index integer index of cards
-  ---@return table Card object
-  function self.getCard(index) return _cards[index] end
-
   ---@return table copy of _cards
   function self.getCards() return table.copy(_cards) end
-
-  -- TODO Delete
-  function self.setCard(card) table.insert(_cards, card) end
 
   ---@return number of cards of player
   function self.getCardNumber() return #_cards end
@@ -94,17 +86,6 @@ function Player.new(o)
       return self.selection
     else
       return AI.chooseColor(_cards, current_card)
-    end
-  end
-
-  ---TODO use tostirng
-  ---@param select boolean true to show index of cards
-  function self.printCards(select)
-    io.write("== Cards of " .. self.name .. " ==\n")
-    for i = 1, #_cards do
-
-      -- local a = (select and _cards[i].print() or _cards[i].print(i))
-      _cards[i].print(select and i or nil)
     end
   end
 

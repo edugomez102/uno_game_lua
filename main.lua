@@ -15,7 +15,6 @@ for i = 1, #players do
   game.addPlayer(players[i])
 end
 
-
 function love.load()
   love.window.setMode(1280, 720)
   game.start()

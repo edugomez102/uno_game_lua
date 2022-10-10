@@ -10,9 +10,6 @@ local Input = {}
 local function checkPosition(x, y, position, fun)
   if x > position.x and x < position.x + position.w and
      y > position.y and y < position.y + position.h then
-    -- TODO delete
-    print(position)
-
     fun()
   end
 end
@@ -24,8 +21,6 @@ function Input.selectCards(x, y, max_select)
     local xpos = P.card_list.x + (i - 1) * P.card_list.margin
     if x > xpos and x < xpos + Card.w and
        y > P.card_list.y and y < P.card_list.y + Card.h then
-
-      print("hola:", i)
       return i
     end
   end
@@ -47,13 +42,14 @@ function Input.selectSmallCards(x, y, max_select)
 
     if x > xpos and x < xpos + Card.w * s and
        y > ypos and y < ypos + Card.h * s then
-
-      print("hola:", i)
       return i
     end
   end
 end
 
+---Buttons of game end
+---
+---@param restart function
 function Input.gameEnd(x, y, restart)
   checkPosition(x, y, P.endgame.close, function()
     love.event.quit()
@@ -62,6 +58,10 @@ function Input.gameEnd(x, y, restart)
     restart()
   end)
 end
+
+-------------------------------------------------------------------------------
+-- Input system
+-------------------------------------------------------------------------------
 
 function Input.update(input_t)
   function love.mousepressed(x, y, button, istouch, presses )

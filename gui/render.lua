@@ -64,7 +64,6 @@ end
 ---Renders arrow. flips arrow if direction is false
 ---
 function Render:playingDirection(dir)
-  -- TODO invertir
   local scale, margin = 1, 0
   if not dir then
     scale = -1; margin = self.arrow_img:getWidth()
@@ -75,7 +74,6 @@ end
 ---Renders text with info of the game
 ---
 function Render:Text(str)
-  -- TODO change
   love.graphics.setColor(255, 0, 0)
   love.graphics.print(str, P.gui_text.x, P.gui_text.y)
   resetColors()
@@ -87,13 +85,13 @@ end
 function Render:players(players)
   for i = 1, #players do
     love.graphics.draw(self.player_img,
-    P.player_list.x + (i - 1) * (self.player_img:getWidth() + P.player_list.margin),
-    P.player_list.y)
+      P.player_list.x + (i - 1) * (self.player_img:getWidth() + P.player_list.margin),
+      P.player_list.y)
 
     -- TODO place text in top of img
     love.graphics.print(players[i].name,
-    P.player_list.x + (i - 1) * (self.player_img:getWidth() + P.player_list.margin),
-    P.player_list.y)
+      P.player_list.x + (i - 1) * (self.player_img:getWidth() + P.player_list.margin),
+      P.player_list.y)
   end
 end
 
@@ -155,7 +153,7 @@ local function renderSmallCards(cards, current_card)
     cards[i].draw(x , y)
     love.graphics.pop()
     hover(x * s, y * s, Card.w * s, Card.h * s,
-    getHoverColor(cards[i], current_card))
+      getHoverColor(cards[i], current_card))
   end
 end
 
@@ -180,8 +178,16 @@ function Render.gameEnd(cards_left)
   drawRect(P.endgame.restart)
 
   love.graphics.print(cards_left, P.endgame.text.x, P.endgame.text.y)
-  -- love.graphics.rectangle("fill", P.endgame.text., 0, 100, 100)
+end
 
+-------------------------------------------------------------------------------
+-- Render system
+-------------------------------------------------------------------------------
+
+function Render.update(render_t)
+  if render_t then
+    render_t.fun(unpack(render_t.args))
+  end
 end
 
 ---Elements to be renderd always
@@ -201,12 +207,6 @@ function Render.fixed(turn, player_list, current_card, text)
   Render:Text(text)
 
   Render.currentCard(current_card)
-end
-
-function Render.update(render_t)
-  if render_t then
-    render_t.fun(unpack(render_t.args))
-  end
 end
 
 return Render

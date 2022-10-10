@@ -53,14 +53,12 @@ function Game.new(o)
 
   ---Update _turn.index to the next playing player on the list.
   ---Set has_drawn false for next turn player.
-  ---Sleep a bit to see what other players do.
   ---Sort cards of next player.
   ---
   local function incrementTurn()
     local player = currentPlayer()
     _turn.index = Utils.getNextTurn(_turn, _player_list)
     player.has_drawn = false
-    if not player.isHuman() then love.timer.sleep(0.5) end
     local next_player = currentPlayer()
     if self.sort_cards then next_player.sortCards() end
   end
@@ -204,7 +202,7 @@ function Game.new(o)
           if play_move == 0 then
             takeOrPass()
           else
-            local card_to_play = player.getCard(play_move)
+            local card_to_play = player.getCards()[play_move]
             _text = Output.playedCard(player, card_to_play)
             playCard(card_to_play, play_move)
           end
@@ -301,18 +299,13 @@ function Game.new(o)
   ---Main loop of the game
   ---
   function self.play()
+    if not currentPlayer().isHuman() then love.timer.sleep(0.7) end
     choose_states[_state].play()
     if table.empty(_deck) then Utils.refillDeck(_played_pile, _deck) end
   end
 
   function self.input()
     Input.update(choose_states[_state].input())
-
-    -- TODO delete
-    function love.keypressed(k)
-      if k == "n" then incrementTurn() end
-      if k == "r" then restart() end
-    end
   end
 
   function self.draw()

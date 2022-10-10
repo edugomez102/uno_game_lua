@@ -1,5 +1,3 @@
-local tint = require("modules.tint")
-
 ---
 ---@class Card
 ---
@@ -9,16 +7,6 @@ Card.w = 72
 Card.h = 108
 
 Card.card_colors = { "R", "B", "Y", "G", "K" }
-
----Show available card colors to select
----
-function Card.showColors()
-  io.write("Select a card color\n")
-  for i = 1, 4 do
-    io.write("[" .. i .. "]: ")
-    io.write(tint(Card.card_colors[i] .. "\n", Card.card_colors[i]))
-  end
-end
 
 function Card.new(o)
   -------------------------------------------------------------------------------
@@ -36,14 +24,6 @@ function Card.new(o)
 
   function self.setImg(path)
     self.img = love.graphics.newImage(path)
-  end
-
-  ---Print card
-  ---
-  ---@param index integer print a number before card to show index in card list
-  function self.print(index)
-    if index then io.write("[".. index .."]: ") end
-    io.write(tint(self.color .. " - " .. self.number .. "\n", self.color))
   end
 
   function self.draw(x, y)

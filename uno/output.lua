@@ -1,14 +1,5 @@
 local Output = { }
 
----Prints game winner
----
----@param name string player name
-function Output.playerWon(name)
-  io.write("=====================\n")
-  io.write(name .. " HAS WON THE GAME\n")
-  io.write("=====================\n")
-end
-
 ---Prints number of cards left by player when game ends
 ---
 ---@param player_list table
@@ -54,14 +45,7 @@ function Output.cantPlay(card_str)
 end
 
 function Output.wrongNumberPlayers()
-  io.write("Wrong number of players\n")
+  io.write("Wrong number of players, must be between 2 and 10\n")
 end
 
--- function Output.playedCards(played_pile)
-  -- 	print("------ Played cards")
-  -- 	for i = 1, #played_pile do
-  -- 		played_pile[i]:print()
-  -- 	end
-  -- end
-
-  return Output
+return Output

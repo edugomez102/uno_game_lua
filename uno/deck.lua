@@ -53,14 +53,6 @@ end
 -- Public functions
 -------------------------------------------------------------------------------
 
----Prints deck
----@param deck table table with list of cards
-function Deck.printDeck(deck)
-  for i = 1, #deck do
-    deck[i]:print()
-  end
-end
-
 ---Genereates list of cards, deck with 108 uno cards
 ---@return table deck deck with 108 uno cards
 function Deck.generateDeck()

@@ -24,12 +24,31 @@ return {
     x = 144, y = 342
   },
   restart = {
-    x = 1170, y = 29
+    x = 1170, y = 29,
+    w = Card.w, h = Card.h
   },
   deck = {
-    x = 732, y = 83
+    x = 732, y = 83,
+    w = Card.w, h = Card.h
   },
   endgame = {
-
+    bg = {
+      x = 0, y = 0,
+      w = 250, h = 150,
+      color = {255, 0, 0}
+    },
+    text = {
+      x = 0, y = 0
+    },
+    close = {
+      x = 0, y = 50,
+      w = 100, h = 80,
+      color = {0, 255, 0}
+    },
+    restart = {
+      x = 250, y = 50,
+      w = 100, h = 80,
+      color = {0, 255, 0}
+    }
   }
 }

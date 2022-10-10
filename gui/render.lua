@@ -11,6 +11,9 @@ local Render = {
   font       = love.graphics.newFont(20)
 }
 
+-- TODO fix
+love.graphics.setFont(Render.font)
+
 local function resetColors()
   love.graphics.setColor(255, 255, 255)
 end
@@ -63,13 +66,11 @@ function Render:playingDirection(dir)
   love.graphics.draw(self.arrow_img, P.direction.x + margin, P.direction.y, 0, scale, 1)
 end
 
-
 ---Renders text with info of the game
 ---
 function Render:Text(str)
   -- TODO change
   love.graphics.setColor(255, 0, 0)
-  love.graphics.setFont(Render.font)
   love.graphics.print(str, P.gui_text.x, P.gui_text.y)
   resetColors()
 
@@ -90,7 +91,7 @@ function Render:players(players)
   end
 end
 
----Renders arrow with game direction
+---Highlights player of current turn
 ---
 function Render:turn(index)
   local w_h = self.player_img:getWidth()
@@ -167,6 +168,11 @@ function Render.selectCards(cards, current_card)
   end
 end
 
+-- function Render.gameEnd(cards_left)
+--   love.graphics.print(cards_left, P.endgame.text.x, P.endgame.text.y)
+--   -- love.graphics.rectangle("fill", P.endgame.text., 0, 100, 100)
+-- end
+
 ---Elements to be renderd always
 ---
 ---@param turn table containing game turn info
@@ -184,6 +190,12 @@ function Render.fixed(turn, player_list, current_card, text)
   Render:Text(text)
 
   Render.currentCard(current_card)
+end
+
+function Render.update(render_t)
+  if render_t.fun then
+    render_t.fun(render_t.fun_cards, render_t.current_card)
+  end
 end
 
 return Render

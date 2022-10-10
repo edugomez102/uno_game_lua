@@ -1,4 +1,3 @@
-local Input = require("gui.input")
 local AI    = require("uno.ai")
 
 ---
@@ -13,7 +12,8 @@ function Player.new(o)
 		name = o.name or "name",
 		-- TODO private ??
 		-- if it has drawn in its turn
-		has_drawn = false
+		has_drawn = false,
+    selection = nil
 	}
 
 	-------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ function Player.new(o)
 	---@return integer index of chosen card
 	function self.chooseCard(current_card)
 		if _human then
-			return Input.select
+			return self.selection
 		else
 			return AI.chooseCard(_cards, current_card)
 		end
@@ -92,7 +92,7 @@ function Player.new(o)
 	---@return number index of chosen card
 	function self.chooseColor(current_card)
 		if _human then
-			return Input.select
+			return self.selection
 		else
 			return AI.chooseColor(_cards, current_card)
 		end

@@ -22,8 +22,8 @@ function love.load()
 end
 
 function love.update(dt)
-  game.input()
   game.play()
+  game.input()
 end
 
 function love.draw()

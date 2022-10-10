@@ -71,7 +71,7 @@ function Game.new(o)
     if not player.isHuman() then love.timer.sleep(0.5) end
     local next_player = currentPlayer()
     if self.sort_cards then next_player.sortCards() end
-    whenHumanPlayer(function() Input.max_select = #next_player.getCards() end)
+    -- whenHumanPlayer(function() Input.max_select = #next_player.getCards() end)
 	end
 
 	---Action cards behaviour in a pretty ugly table :)
@@ -108,7 +108,7 @@ function Game.new(o)
       local card = player.takeCard(_deck)
 			_text = Output.playerDraws(player, card)
 			player.has_drawn = true
-      whenHumanPlayer(function() Input.max_select = Input.max_select + 1 end)
+      -- whenHumanPlayer(function() Input.max_select = Input.max_select + 1 end)
 		else
 			_text = Output.turnPass(player)
 			incrementTurn()
@@ -190,16 +190,19 @@ function Game.new(o)
     card = {
       render = function()
         local player = currentPlayer()
-        whenHumanPlayer(Render.selectCards, player.getCards(), _current_card)
+        if player.isHuman() then
+          return {
+            fun = Render.selectCards,
+            fun_cards = player.getCards(),
+            current_card = _current_card
+          }
+        end
       end,
       input = function()
-        -- return Input.selectCards
-        -- whenHumanPlayer(function() Input.max_select = #currentPlayer().getCards() end)
-        if Input.max_select < 15 then
-          return Input.selectCards
-        else
-          return Input.selectSmallCards
-        end
+        local t = { max_select = #currentPlayer().getCards(), player = currentPlayer() }
+        if t.max_select < 15 then t.fun = Input.selectCards
+                             else t.fun = Input.selectSmallCards end
+        return t
       end,
       play = function()
         local player = currentPlayer()
@@ -217,15 +220,25 @@ function Game.new(o)
     },
     color = {
       render = function()
-        whenHumanPlayer(Render.selectCards, Card.any, _current_card)
+        local player = currentPlayer()
+        if player.isHuman() then
+          return {
+            fun = Render.selectCards,
+            fun_cards = Card.any,
+            current_card = _current_card
+          }
+        end
       end,
       input = function()
-        -- whenHumanPlayer(function() Input.max_select = #Card.any end)
-        return Input.selectCards
+        return {
+          fun = Input.selectCards,
+          max_select = #Card.any,
+          player = currentPlayer()
+        }
       end,
       play = function()
         local color_index = currentPlayer().chooseColor(_current_card)
-        if color_index then
+        if color_index and color_index > 0 then
           local color = Card.card_colors[color_index]
           _current_card = Card.getAnyByColor(color)
           _text = Output.colorChange(currentPlayer(), color)
@@ -234,14 +247,17 @@ function Game.new(o)
         end
       end
     },
-    game_end = {
-      render = function()
-      end,
-      input  = function()
-      end,
-      play   = function()
-      end
-    }
+    -- game_end = {
+    --   render = function()
+    --     Render.gameEnd(Output.playersCardsLeft(_player_list))
+    --   end,
+    --   input  = function()
+    --     Input.reset()
+    --     return Input.gameEnd
+    --   end,
+    --   play   = function()
+    --   end
+    -- }
   }
 
 	-------------------------------------------------------------------------------
@@ -295,11 +311,8 @@ function Game.new(o)
   end
 
 	function self.draw()
-    local player = _player_list[_turn.index]
     Render.fixed(_turn, _player_list, _current_card, _text)
-
-    -- if _has_ended then return end
-    choose_states[_state].render()
+    Render.update(choose_states[_state].render())
 	end
 
 	return self

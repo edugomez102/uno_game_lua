@@ -33,7 +33,7 @@ function Game.new(o)
   local _state = "card"
 
   -- TODO delete
-  local initial_cards = 7
+  local initial_cards = 1
 
 	-------------------------------------------------------------------------------
 	-- Private functions
@@ -134,7 +134,7 @@ function Game.new(o)
         _has_ended = true
         print("end game")
         _state = "game_end"
-        _text = "game end"
+        _text = player.name .. " has won the game."
 
         --TODO final game screen
         -- Output.playerWon(player.name)
@@ -201,9 +201,15 @@ function Game.new(o)
         end
       end,
       input = function()
-        local t = { max_select = #currentPlayer().getCards(), player = currentPlayer() }
-        if t.max_select < 15 then t.fun = Input.selectCards
-                             else t.fun = Input.selectSmallCards end
+        local t = {
+          player = currentPlayer(),
+          restart = restart,
+          args = {
+            #currentPlayer().getCards()
+          }
+        }
+        if t.args[1] < 15 then t.fun = Input.selectCards
+                          else t.fun = Input.selectSmallCards end
         return t
       end,
       play = function()
@@ -236,8 +242,9 @@ function Game.new(o)
       input = function()
         return {
           fun = Input.selectCards,
-          max_select = #Card.any,
-          player = currentPlayer()
+          args = { #Card.any },
+          player = currentPlayer(),
+          restart = restart
         }
       end,
       play = function()
@@ -262,7 +269,12 @@ function Game.new(o)
       end,
       input  = function()
         return {
-          fun = Input.gameEnd
+          fun = Input.gameEnd,
+          args = {
+            restart
+          },
+          player = currentPlayer(),
+          restart = restart
         }
       end,
       play   = function()

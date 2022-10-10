@@ -7,9 +7,9 @@ local Input = {}
 
 ---Checks for position in positions module and calls function
 ---
-local function checkPosition(x, y, position, w, h, fun)
-  if x > P[position].x and x < P[position].x + w and
-     y > P[position].y and y < P[position].y + h then
+local function checkPosition(x, y, position, fun)
+  if x > position.x and x < position.x + position.w and
+     y > position.y and y < position.y + position.h then
     -- TODO delete
     print(position)
 
@@ -54,22 +54,25 @@ function Input.selectSmallCards(x, y, max_select)
   end
 end
 
--- function Input.gameEnd(x, y)
---   local w, h = 50, 50
---   if x > P.endgame.btn1.x and x < P.endgame.btn1.x + w and
---      y > P.endgame.btn1.y and y < P.endgame.btn1.y + h then
---      love.event.quit()
---   end
--- end
+function Input.gameEnd(x, y, restart)
+  checkPosition(x, y, P.endgame.close, function()
+    love.event.quit()
+  end)
+  checkPosition(x, y, P.endgame.restart, function()
+    restart()
+  end)
+end
 
 function Input.update(input_t)
   function love.mousepressed(x, y, button, istouch, presses )
     if button == 1 then
-      input_t.player.selection = input_t.fun(x, y, input_t.max_select)
+      input_t.player.selection = input_t.fun(x, y, unpack(input_t.args))
 
-      -- TODO check 40, 40
-      checkPosition(x, y, "restart", 40, 40, function() print("ta") end)
-      checkPosition(x, y, "deck", Card.w, Card.h, function()
+      -- TODO check position
+      checkPosition(x, y, P.restart, function()
+        input_t.restart()
+      end)
+      checkPosition(x, y, P.deck, function()
         input_t.player.selection = 0
       end)
     end

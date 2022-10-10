@@ -18,6 +18,12 @@ local function resetColors()
   love.graphics.setColor(255, 255, 255)
 end
 
+local function drawRect(pos)
+  love.graphics.setColor(pos.color)
+  love.graphics.rectangle("fill", pos.x, pos.y, pos.w, pos.h)
+  resetColors()
+end
+
 local function getHoverColor(card, current_card)
   if card and current_card then
     if Rules.checkNumberAndColor(card, current_card) then
@@ -169,8 +175,13 @@ function Render.selectCards(cards, current_card)
 end
 
 function Render.gameEnd(cards_left)
+  drawRect(P.endgame.bg)
+  drawRect(P.endgame.close)
+  drawRect(P.endgame.restart)
+
   love.graphics.print(cards_left, P.endgame.text.x, P.endgame.text.y)
   -- love.graphics.rectangle("fill", P.endgame.text., 0, 100, 100)
+
 end
 
 ---Elements to be renderd always

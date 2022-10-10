@@ -37,6 +37,7 @@ function Player.new(o)
 
   function self.reset()
     self.has_drawn = false
+    self.selection = nil
     _cards = {}
   end
 

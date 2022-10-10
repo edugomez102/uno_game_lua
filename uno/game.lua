@@ -33,7 +33,7 @@ function Game.new(o)
   local _state = "card"
 
   -- TODO delete
-  local initial_cards = 1
+  local initial_cards = 7
 
 	-------------------------------------------------------------------------------
 	-- Private functions
@@ -44,20 +44,11 @@ function Game.new(o)
   ---@return table player
   local function currentPlayer() return _player_list[_turn.index] end
 
-  ---States
-
   ---Let player choose next color to play
   local function nextStateCard()  _state = "card"  end
 
   ---Let player choose a card to play
   local function nextStateColor() _state = "color" end
-
-  ---
-  ---@param fun function
-  ---@param ... any
-  local function whenHumanPlayer(fun, ...)
-    if currentPlayer().isHuman() then fun(...) end
-  end
 
 	---Update _turn.index to the next playing player on the list.
   ---Set has_drawn false for next turn player.
@@ -71,7 +62,6 @@ function Game.new(o)
     if not player.isHuman() then love.timer.sleep(0.5) end
     local next_player = currentPlayer()
     if self.sort_cards then next_player.sortCards() end
-    -- whenHumanPlayer(function() Input.max_select = #next_player.getCards() end)
 	end
 
 	---Action cards behaviour in a pretty ugly table :)
@@ -132,18 +122,12 @@ function Game.new(o)
 
       if Rules.checkLastCard(player) then
         _has_ended = true
-        print("end game")
         _state = "game_end"
         _text = player.name .. " has won the game."
-
-        --TODO final game screen
-        -- Output.playerWon(player.name)
-        -- Output.playersCardsLeft(_player_list)
-        -- love.event.quit()
       end
 
-			if not Rules.checkActionCard(
-        _action_cards, _current_card, _turn, _player_list) then
+			if _state == "card" and not Rules.checkActionCard(_action_cards,
+        _current_card, _turn, _player_list) then
         incrementTurn()
       end
 
@@ -277,8 +261,7 @@ function Game.new(o)
           restart = restart
         }
       end,
-      play   = function()
-      end
+      play   = function() end
     }
   }
 
@@ -318,7 +301,6 @@ function Game.new(o)
 	---
 	function self.play()
     choose_states[_state].play()
-
 		if table.empty(_deck) then Utils.refillDeck(_played_pile, _deck) end
 	end
 

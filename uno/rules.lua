@@ -40,12 +40,8 @@ end
 ---
 ---@return boolean true if the game ends
 function Rules.checkLastCard(player)
-  if player.getCardNumber() == 0 then
-    -- love.event.quit()
-    return true
-  else
-    return false
-  end
+  if player.getCardNumber() == 0 then return true
+  else return false end
 end
 
 ---Checks if played card is an action card and calls its function

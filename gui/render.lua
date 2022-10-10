@@ -168,10 +168,10 @@ function Render.selectCards(cards, current_card)
   end
 end
 
--- function Render.gameEnd(cards_left)
---   love.graphics.print(cards_left, P.endgame.text.x, P.endgame.text.y)
---   -- love.graphics.rectangle("fill", P.endgame.text., 0, 100, 100)
--- end
+function Render.gameEnd(cards_left)
+  love.graphics.print(cards_left, P.endgame.text.x, P.endgame.text.y)
+  -- love.graphics.rectangle("fill", P.endgame.text., 0, 100, 100)
+end
 
 ---Elements to be renderd always
 ---
@@ -193,8 +193,8 @@ function Render.fixed(turn, player_list, current_card, text)
 end
 
 function Render.update(render_t)
-  if render_t.fun then
-    render_t.fun(render_t.fun_cards, render_t.current_card)
+  if render_t then
+    render_t.fun(unpack(render_t.args))
   end
 end
 

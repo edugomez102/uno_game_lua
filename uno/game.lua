@@ -193,8 +193,10 @@ function Game.new(o)
         if player.isHuman() then
           return {
             fun = Render.selectCards,
-            fun_cards = player.getCards(),
-            current_card = _current_card
+            args = {
+              player.getCards(),
+              _current_card
+            }
           }
         end
       end,
@@ -224,8 +226,10 @@ function Game.new(o)
         if player.isHuman() then
           return {
             fun = Render.selectCards,
-            fun_cards = Card.any,
-            current_card = _current_card
+            args = {
+              Card.any,
+              _current_card
+            }
           }
         end
       end,
@@ -247,17 +251,23 @@ function Game.new(o)
         end
       end
     },
-    -- game_end = {
-    --   render = function()
-    --     Render.gameEnd(Output.playersCardsLeft(_player_list))
-    --   end,
-    --   input  = function()
-    --     Input.reset()
-    --     return Input.gameEnd
-    --   end,
-    --   play   = function()
-    --   end
-    -- }
+    game_end = {
+      render = function()
+        return {
+          fun = Render.gameEnd,
+          args = {
+            Output.playersCardsLeft(_player_list)
+          }
+        }
+      end,
+      input  = function()
+        return {
+          fun = Input.gameEnd
+        }
+      end,
+      play   = function()
+      end
+    }
   }
 
 	-------------------------------------------------------------------------------

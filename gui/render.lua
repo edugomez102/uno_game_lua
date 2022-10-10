@@ -40,11 +40,11 @@ end
 local function hover(xpos, ypos, w, h, colors)
   local mx, my = love.mouse.getPosition()
   if mx > xpos and mx < xpos + w and
-     my > ypos and my < ypos + h then
-     love.graphics.setColor(colors)
-     love.graphics.rectangle("fill", xpos, ypos, w, h)
-     resetColors()
-   end
+    my > ypos and my < ypos + h then
+    love.graphics.setColor(colors)
+    love.graphics.rectangle("fill", xpos, ypos, w, h)
+    resetColors()
+  end
 end
 
 -------------------------------------------------------------------------------
@@ -87,13 +87,13 @@ end
 function Render:players(players)
   for i = 1, #players do
     love.graphics.draw(self.player_img,
-      P.player_list.x + (i - 1) * (self.player_img:getWidth() + P.player_list.margin),
-      P.player_list.y)
+    P.player_list.x + (i - 1) * (self.player_img:getWidth() + P.player_list.margin),
+    P.player_list.y)
 
     -- TODO place text in top of img
     love.graphics.print(players[i].name,
-      P.player_list.x + (i - 1) * (self.player_img:getWidth() + P.player_list.margin),
-      P.player_list.y)
+    P.player_list.x + (i - 1) * (self.player_img:getWidth() + P.player_list.margin),
+    P.player_list.y)
   end
 end
 
@@ -155,7 +155,7 @@ local function renderSmallCards(cards, current_card)
     cards[i].draw(x , y)
     love.graphics.pop()
     hover(x * s, y * s, Card.w * s, Card.h * s,
-      getHoverColor(cards[i], current_card))
+    getHoverColor(cards[i], current_card))
   end
 end
 

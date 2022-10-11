@@ -181,9 +181,10 @@ function Render.selectCards(cards, current_card)
 end
 
 function Render.gameEnd(cards_left)
+  love.graphics.setFont(love.graphics.newFont(15))
   drawRect(P.endgame.bg)
-  drawRect(P.endgame.close)
-  drawRect(P.endgame.restart)
+  -- drawRect(P.endgame.close)
+  -- drawRect(P.endgame.restart)
 
   love.graphics.print(cards_left, P.endgame.text.x, P.endgame.text.y)
 end
@@ -215,7 +216,7 @@ function Render.fixed(turn, player_list, current_card, text)
   Render:Text(text)
 
   Render.currentCard(current_card)
-  -- drawRect(P.restart)
+  hover(P.restart.x , P.restart.y, P.restart.w, P.restart.h, getHoverColor())
 end
 
 return Render

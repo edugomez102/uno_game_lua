@@ -8,7 +8,8 @@ local Render = {
   player_img = love.graphics.newImage("img/person_1.png"),
   card_back  = love.graphics.newImage("img/back.png"),
   pass_turn  = love.graphics.newImage("img/pass.png"),
-  font       = love.graphics.newFont(20)
+  font       = love.graphics.newFont(18),
+  font_small = love.graphics.newFont(12)
 }
 
 -- TODO fix
@@ -83,28 +84,35 @@ end
 ---Renders players
 ---
 function Render:players(players)
+  love.graphics.setFont(self.font_small)
   for i = 1, #players do
+    love.graphics.push()
+    local s = 0.7
+    love.graphics.scale(s, s)
     love.graphics.draw(self.player_img,
-      P.player_list.x + (i - 1) * (self.player_img:getWidth() + P.player_list.margin),
-      P.player_list.y)
+      (P.player_list.x + (i - 1) * (self.player_img:getWidth() + P.player_list.margin)) / s,
+      (P.player_list.y + 4 ) / s)
+    love.graphics.pop()
 
-    -- TODO place text in top of img
+    love.graphics.setColor(44 / 255, 44 / 255, 45 / 255)
     love.graphics.print(players[i].name,
       P.player_list.x + (i - 1) * (self.player_img:getWidth() + P.player_list.margin),
-      P.player_list.y)
+      P.player_list.y + (self.player_img:getHeight() * s) + 5)
+    resetColors()
   end
+  love.graphics.setFont(self.font)
 end
 
 ---Highlights player of current turn
 ---
 function Render:turn(index)
-  local w_h = self.player_img:getWidth()
+  local w_h = self.player_img:getWidth() - 5
   local xpos = P.player_list.x + (index - 1) *
-  (self.player_img:getWidth() + P.player_list.margin)
+  (self.player_img:getWidth() + P.player_list.margin) - 12
 
-  love.graphics.setColor(255, 0, 0)
-  -- love.graphics.setColor(248, 218, 39)
-  love.graphics.rectangle( "fill", xpos, P.player_list.y, w_h, w_h)
+  love.graphics.setColor(255, 0, 0, 0.9)
+  -- love.graphics.setColor(248 / 255, 218 / 255, 39 / 255)
+  love.graphics.rectangle( "fill", xpos, P.player_list.y, w_h + 4 , w_h)
   resetColors()
 end
 
@@ -207,6 +215,7 @@ function Render.fixed(turn, player_list, current_card, text)
   Render:Text(text)
 
   Render.currentCard(current_card)
+  -- drawRect(P.restart)
 end
 
 return Render

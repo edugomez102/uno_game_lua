@@ -14,7 +14,7 @@ return {
     margin = 9.5 + Card.w * 0.75
   },
   player_list = {
-    x = 44, y = 391,
+    x = 56, y = 391,
     margin = 33.66
   },
   direction = {

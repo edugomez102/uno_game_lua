@@ -1,6 +1,5 @@
 local Game   = require("uno.game")
 local Player = require("uno.player")
-require("modules.table_")
 
 local players = {
   Player.new({name = "P1", human = true}),

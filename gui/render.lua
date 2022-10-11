@@ -3,7 +3,7 @@ local Card  = require('uno.card')
 local Rules = require("uno.rules")
 
 local Render = {
-  bg_img     = love.graphics.newImage("img/uno_layout2.png"),
+  bg_img     = love.graphics.newImage("img/uno_layout.png"),
   arrow_img  = love.graphics.newImage("img/red_arrow.png"),
   player_img = love.graphics.newImage("img/person_1.png"),
   card_back  = love.graphics.newImage("img/cards/back.png"),
@@ -11,9 +11,6 @@ local Render = {
   font       = love.graphics.newFont(18),
   font_small = love.graphics.newFont(12)
 }
-
--- TODO fix
-love.graphics.setFont(Render.font)
 
 local function resetColors()
   love.graphics.setColor(255, 255, 255)
@@ -37,7 +34,7 @@ local function getHoverColor(card, current_card)
   end
 end
 
--- adds visual hover to hovered area with mouse
+---Adds visual hover to hovered area with mouse
 local function hover(xpos, ypos, w, h, colors)
   local mx, my = love.mouse.getPosition()
   if mx > xpos and mx < xpos + w and
@@ -195,8 +192,6 @@ end
 function Render.gameEnd(cards_left)
   love.graphics.setFont(love.graphics.newFont(15))
   drawRect(P.endgame.bg)
-  -- drawRect(P.endgame.close)
-  -- drawRect(P.endgame.restart)
 
   love.graphics.print(cards_left, P.endgame.text.x, P.endgame.text.y)
 end
@@ -205,6 +200,8 @@ end
 -- Render system
 -------------------------------------------------------------------------------
 
+---@param render_t table containing render function and its args
+---
 function Render.update(render_t)
   if render_t then
     render_t.fun(unpack(render_t.args))
@@ -218,7 +215,6 @@ end
 ---@param current_card table
 ---@param text string rendering game info
 function Render.fixed(turn, player_list, current_card, text)
-  -- TODO make private funcs
   local player = player_list[turn.index]
   Render:background()
   Render:playingDirection(turn.dir)

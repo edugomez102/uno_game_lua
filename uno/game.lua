@@ -1,3 +1,5 @@
+require("modules.table_")
+
 local Deck   = require("uno.deck")
 local Card   = require("uno.card")
 local Rules  = require("uno.rules")
@@ -28,12 +30,8 @@ function Game.new(o)
     index = 1,
     dir   = true
   }
-  -- text to render
-  local _text = "Game starts!"
+  local _text = "Game starts!" -- text to render
   local _state = "card"
-
-  -- TODO delete
-  local initial_cards = 7
 
   -------------------------------------------------------------------------------
   -- Private functions
@@ -65,8 +63,7 @@ function Game.new(o)
 
   ---Action cards behaviour in a pretty ugly table :)
   ---
-  local _action_cards =
-  {
+  local _action_cards = {
     ["skip"] = incrementTurn,
     ---Invert turn direction
     ["reverse"] = function()
@@ -251,10 +248,7 @@ function Game.new(o)
       end,
       input  = function()
         return {
-          fun = Input.gameEnd,
-          args = {
-            restart
-          },
+          fun = function () end,
           player = currentPlayer(),
           restart = restart
         }
@@ -289,7 +283,7 @@ function Game.new(o)
     end
 
     for i = 1, #_player_list do
-      _player_list[i].dealCards(_deck, initial_cards)
+      _player_list[i].dealCards(_deck, 7)
     end
     setInitialCard()
     if self.sort_cards then currentPlayer().sortCards() end
@@ -298,6 +292,7 @@ function Game.new(o)
   ---Main loop of the game
   ---
   function self.play()
+    -- TODO use coroutine
     if not currentPlayer().isHuman() then love.timer.sleep(1) end
     choose_states[_state].play()
     if table.empty(_deck) then Utils.refillDeck(_played_pile, _deck) end

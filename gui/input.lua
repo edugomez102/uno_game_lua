@@ -47,28 +47,16 @@ function Input.selectSmallCards(x, y, max_select)
   end
 end
 
----Buttons of game end
----
----@param restart function
-function Input.gameEnd(x, y, restart)
-  checkPosition(x, y, P.endgame.close, function()
-    love.event.quit()
-  end)
-  checkPosition(x, y, P.endgame.restart, function()
-    restart()
-  end)
-end
-
 -------------------------------------------------------------------------------
 -- Input system
 -------------------------------------------------------------------------------
 
+---@param input_t table containing input function and its args
+---
 function Input.update(input_t)
   function love.mousepressed(x, y, button, istouch, presses )
     if button == 1 then
       input_t.player.selection = input_t.fun(x, y, unpack(input_t.args))
-
-      -- TODO check position
       checkPosition(x, y, P.restart, function()
         input_t.restart()
       end)

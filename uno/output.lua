@@ -9,6 +9,7 @@ function Output.playersCardsLeft(player_list)
     t[#t+1] = player_list[i].name .. " had " ..
     player_list[i].getCardNumber() .. " cards left\n"
   end
+  t[#t+1] = "\nClick on restart or close the window"
   return table.concat(t)
 end
 
@@ -17,7 +18,7 @@ end
 ---@param player table Player
 ---@param card_to_play table Card
 function Output.playedCard(player, card_to_play)
-  return player.name .. " played card: " .. card_to_play.__tostring()
+  return player.name .. " played card: " .. card_to_play.__tostring() .. "\n"
 end
 
 ---Print changed color
@@ -30,7 +31,7 @@ end
 
 function Output.playerDraws(player, card)
   if player.isHuman() then
-    return player.name .. " draws card " .. card.__tostring()
+    return player.name .. " draws card " .. card.__tostring() .. "\n"
   else
     return player.name .. " draws a card\n"
   end
@@ -41,7 +42,7 @@ function Output.turnPass(player)
 end
 
 function Output.cantPlay(card_str)
-  return "CANT PLAY THAT CARD: " .. card_str
+  return "CANT PLAY THAT CARD: " .. card_str .. "\n"
 end
 
 function Output.wrongNumberPlayers()

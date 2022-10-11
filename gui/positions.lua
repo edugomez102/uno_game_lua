@@ -24,8 +24,9 @@ return {
     x = 144, y = 342
   },
   restart = {
-    x = 1170, y = 29,
-    w = Card.w, h = Card.h
+    x = 1150, y = 29,
+    w = Card.h, h = Card.w,
+    color = {0.5,1,1}
   },
   deck = {
     x = 732, y = 83,
@@ -33,12 +34,12 @@ return {
   },
   endgame = {
     bg = {
-      x = 0, y = 0,
-      w = 250, h = 150,
-      color = {255, 0, 0}
+      x = 139, y = 87,
+      w = 400, h = 200,
+      color = {44 / 255, 44 / 255, 45 / 255}
     },
     text = {
-      x = 0, y = 0
+      x = 149, y = 97
     },
     close = {
       x = 0, y = 50,

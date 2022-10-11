@@ -97,7 +97,6 @@ function Game.new(o)
       local card = player.takeCard(_deck)
       _text = Output.playerDraws(player, card)
       player.has_drawn = true
-      -- whenHumanPlayer(function() Input.max_select = Input.max_select + 1 end)
     else
       _text = Output.turnPass(player)
       incrementTurn()
@@ -166,8 +165,8 @@ function Game.new(o)
 
   ---Simple state patrol to manage cards layout when playing card or choosing color
   ---
-  ---@function render cards to be rendered in layout
-  ---@function input sets Input.max_select to update input
+  ---@function render returns function to use by render system
+  ---@function input  returns function to use by input system
   ---@function play logic of choose state
   local choose_states = {
     card = {
@@ -299,7 +298,7 @@ function Game.new(o)
   ---Main loop of the game
   ---
   function self.play()
-    if not currentPlayer().isHuman() then love.timer.sleep(0.7) end
+    if not currentPlayer().isHuman() then love.timer.sleep(1) end
     choose_states[_state].play()
     if table.empty(_deck) then Utils.refillDeck(_played_pile, _deck) end
   end

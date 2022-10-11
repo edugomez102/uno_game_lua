@@ -13,7 +13,7 @@ local Deck = {} -- namespace
 local function addColors(deck, from_number, color)
   for i = from_number, 12 do
     local number
-    local img = "img/" .. color .. "_"
+    local img = "img/cards/" .. color .. "_"
     if i == 10 then
       number = "skip"
       img = img .. "skip"
@@ -38,13 +38,13 @@ local function addBlack(deck)
   for _ = 1, 4 do
     table.insert(deck, Card.new({
       number   = "wild draw 4",
-      img_path = "img/K_+4.png",
+      img_path = "img/cards/K_+4.png",
     }))
   end
   for _ = 1, 4 do
     table.insert(deck, Card.new({
       number = "wild",
-      img_path = "img/K_wild.png",
+      img_path = "img/cards/K_wild.png",
     }))
   end
 end

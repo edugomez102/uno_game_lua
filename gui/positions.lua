@@ -2,15 +2,17 @@ local Card = require('uno.card')
 return {
   current_card = {
     x = 568, y = 83,
-    scale = 2
+    scale = 1 / 1.675
   },
   card_list = {
     x = 42, y = 537,
-    margin = 8.27 + Card.w
+    scale = 1 / 3.35,
+    margin = 8.27 + Card.w,
   },
+  -- 0.75 reduction from normal card
   card_list_s = {
     x = 42, y1 = 502, y2 = 599,
-    scale = 0.75,
+    scale = 1 / 3.35 * 0.75,
     margin = 9.5 + Card.w * 0.75
   },
   player_list = {
@@ -30,6 +32,7 @@ return {
   },
   deck = {
     x = 732, y = 83,
+    scale = 1 / 3.35,
     w = Card.w, h = Card.h
   },
   endgame = {

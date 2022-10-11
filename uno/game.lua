@@ -89,9 +89,9 @@ function Game.new(o)
     ["wild"] = nextStateColor
   }
 
-  ---Take or pass card. if player has already taken a card then pass
+  ---Draw or pass card. if player has already taken a card then pass
   ---
-  local function takeOrPass()
+  local function drawOrPass()
     local player = currentPlayer()
     if not player.has_drawn then
       local card = player.takeCard(_deck)
@@ -199,7 +199,7 @@ function Game.new(o)
         local play_move = player.chooseCard(_current_card)
         if play_move then
           if play_move == 0 then
-            takeOrPass()
+            drawOrPass()
           else
             local card_to_play = player.getCards()[play_move]
             _text = Output.playedCard(player, card_to_play)

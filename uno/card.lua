@@ -38,10 +38,10 @@ function Card.new(o)
 end
 
 Card.any = {
-  Card.new{number = "any", color = "R", img_path = ("img/R_.png")},
-  Card.new{number = "any", color = "B", img_path = ("img/B_.png")},
-  Card.new{number = "any", color = "Y", img_path = ("img/Y_.png")},
-  Card.new{number = "any", color = "G", img_path = ("img/G_.png")},
+  Card.new{number = "any", color = "R", img_path = ("img/cards/R_.png")},
+  Card.new{number = "any", color = "B", img_path = ("img/cards/B_.png")},
+  Card.new{number = "any", color = "Y", img_path = ("img/cards/Y_.png")},
+  Card.new{number = "any", color = "G", img_path = ("img/cards/G_.png")},
 }
 
 function Card.getAnyByColor(color)

@@ -6,8 +6,8 @@ local Render = {
   bg_img     = love.graphics.newImage("img/uno_layout2.png"),
   arrow_img  = love.graphics.newImage("img/red_arrow.png"),
   player_img = love.graphics.newImage("img/person_1.png"),
-  card_back  = love.graphics.newImage("img/back.png"),
-  pass_turn  = love.graphics.newImage("img/pass.png"),
+  card_back  = love.graphics.newImage("img/cards/back.png"),
+  pass_turn  = love.graphics.newImage("img/cards/pass.png"),
   font       = love.graphics.newFont(18),
   font_small = love.graphics.newFont(12)
 }
@@ -118,12 +118,16 @@ end
 
 ---Renders deck to take a card or icon to pass turn
 ---
-function Render:deckOrPass(has_drawn, is_human)
+function Render:drawOrPass(has_drawn, is_human)
+  local s = P.deck.scale
+  love.graphics.push()
+  love.graphics.scale(s, s)
   if has_drawn and is_human then
-    love.graphics.draw(self.pass_turn, P.deck.x, P.deck.y)
+    love.graphics.draw(self.pass_turn, P.deck.x / s, P.deck.y / s)
   else
-    love.graphics.draw(self.card_back, P.deck.x, P.deck.y)
+    love.graphics.draw(self.card_back, P.deck.x / s, P.deck.y / s)
   end
+  love.graphics.pop()
   if is_human then
     hover(P.deck.x, P.deck.y, Card.w, Card.h, getHoverColor())
   end
@@ -138,7 +142,7 @@ end
 ---@param card table
 function Render.currentCard(card)
   love.graphics.push()
-  local s = 2
+  local s = P.current_card.scale
   love.graphics.scale(s, s)
   card.draw(568 / s, 83 / s)
   love.graphics.pop()
@@ -147,7 +151,7 @@ end
 local function renderSmallCards(cards, current_card)
   for i = 1, #cards do
     love.graphics.push()
-    local s = 0.75
+    local s = P.card_list_s.scale
     local x, y
     if i < 20 then
       y = P.card_list_s.y1 / s
@@ -160,7 +164,7 @@ local function renderSmallCards(cards, current_card)
     love.graphics.scale(s, s)
     cards[i].draw(x , y)
     love.graphics.pop()
-    hover(x * s, y * s, Card.w * s, Card.h * s,
+    hover(x * s, y * s, Card.w * .75, Card.h * .75,
       getHoverColor(cards[i], current_card))
   end
 end
@@ -169,11 +173,19 @@ end
 ---
 ---@param cards table
 function Render.selectCards(cards, current_card)
+  local s = P.card_list.scale
   if #cards < 15 then
     for i = 1, #cards do
-      local x, y = P.card_list.x + (i - 1) * (P.card_list.margin), P.card_list.y
+      love.graphics.push()
+      love.graphics.scale(s, s)
+      local y = P.card_list.y / s
+      local x = (P.card_list.x + (i - 1) * (P.card_list.margin)) / s
+
+      -- local x, y = P.card_list.x + (i - 1) * (P.card_list.margin), P.card_list.y
+
       cards[i].draw(x, y)
-      hover(x, y, Card.w, Card.h, getHoverColor(cards[i], current_card))
+      love.graphics.pop()
+      hover(x * s, y * s, Card.w , Card.h , getHoverColor(cards[i], current_card))
     end
   else
     renderSmallCards(cards, current_card)
@@ -212,7 +224,7 @@ function Render.fixed(turn, player_list, current_card, text)
   Render:playingDirection(turn.dir)
   Render:turn(turn.index)
   Render:players(player_list)
-  Render:deckOrPass(player.has_drawn, player.isHuman())
+  Render:drawOrPass(player.has_drawn, player.isHuman())
   Render:Text(text)
 
   Render.currentCard(current_card)

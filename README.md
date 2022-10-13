@@ -3,11 +3,9 @@
 ![cli capture](img/captures/uno_cli_capture.png)
 ![gui capture](img/captures/uno_gui_capture.png)
 
-Uno game implementation in lua using just terminal I/O and love2d.
-
-following the [oficial rules](https://en.wikipedia.org/wiki/Uno_(card_game))
-
-card images from https://en.wikipedia.org/wiki/Uno_(card_game)#/media/File:UNO_cards_deck.svg
+Uno game implementation in lua using just terminal I/O and love2d.  
+Following the [oficial rules](https://en.wikipedia.org/wiki/Uno_(card_game))  
+Card images from https://en.wikipedia.org/wiki/Uno_(card_game)#/media/File:UNO_cards_deck.svg
 
 ## Quick Guide
 
@@ -41,5 +39,5 @@ effects on the game).
 
 ## TODOs
 
-[ ] Use corutines for AI waiting in gui mode
-[ ] improve UX I guess ?
+- [ ] Use corutines for AI waiting in gui mode
+- [ ] improve UX I guess ?

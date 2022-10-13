@@ -1,10 +1,11 @@
 # UNO card game in lua
 
-![cli capture](img/captures/uno_cli_capture.png)
-![gui capture](img/captures/uno_gui_capture.png)
-
 Uno game implementation in lua using just terminal I/O and love2d.  
-Following the [oficial rules](https://en.wikipedia.org/wiki/Uno_(card_game))  
+
+![gui capture](img/captures/uno_gui_capture.png)
+![cli capture](img/captures/uno_cli_capture.png)
+
+Following the [oficial rules](https://en.wikipedia.org/wiki/Uno_(card_game)).
 Card images from https://en.wikipedia.org/wiki/Uno_(card_game)#/media/File:UNO_cards_deck.svg
 
 ## Quick Guide

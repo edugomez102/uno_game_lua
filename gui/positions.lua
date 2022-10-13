@@ -1,4 +1,8 @@
 local Card = require('uno.card')
+
+local card_scale = 1 / 3.35
+local s_card_reduction = 0.75
+
 return {
   current_card = {
     x = 568, y = 83,
@@ -6,14 +10,14 @@ return {
   },
   card_list = {
     x = 42, y = 537,
-    scale = 1 / 3.35,
+    scale = card_scale,
     margin = 8.27 + Card.w,
   },
-  -- 0.75 reduction from normal card
   card_list_s = {
     x = 42, y1 = 502, y2 = 599,
-    scale = 1 / 3.35 * 0.75,
-    margin = 9.5 + Card.w * 0.75
+    scale = card_scale * s_card_reduction,
+    margin = 9.5 + Card.w * s_card_reduction,
+    reduction = s_card_reduction
   },
   player_list = {
     x = 56, y = 391,
@@ -28,7 +32,7 @@ return {
   restart = {
     x = 1150, y = 29,
     w = Card.h, h = Card.w,
-    color = {0.5,1,1}
+    color = {0.5, 1 ,1}
   },
   deck = {
     x = 732, y = 83,

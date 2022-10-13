@@ -159,7 +159,9 @@ local function renderSmallCards(cards, current_card)
     love.graphics.scale(s, s)
     cards[i].draw(x , y)
     love.graphics.pop()
-    hover(x * s, y * s, Card.w * .75, Card.h * .75,
+    hover(x * s, y * s,
+      Card.w * P.card_list_s.reduction,
+      Card.h * P.card_list_s.reduction,
       getHoverColor(cards[i], current_card))
   end
 end

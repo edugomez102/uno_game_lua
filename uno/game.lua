@@ -249,6 +249,7 @@ function Game.new(o)
       input  = function()
         return {
           fun = function () end,
+          args = {},
           player = currentPlayer(),
           restart = restart
         }

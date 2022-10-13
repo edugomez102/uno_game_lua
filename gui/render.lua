@@ -75,7 +75,6 @@ function Render:Text(str)
   love.graphics.setColor(255, 0, 0)
   love.graphics.print(str, P.gui_text.x, P.gui_text.y)
   resetColors()
-
 end
 
 ---Renders players
@@ -105,10 +104,9 @@ end
 function Render:turn(index)
   local w_h = self.player_img:getWidth() - 5
   local xpos = P.player_list.x + (index - 1) *
-  (self.player_img:getWidth() + P.player_list.margin) - 12
+    (self.player_img:getWidth() + P.player_list.margin) - 12
 
   love.graphics.setColor(255, 0, 0, 0.9)
-  -- love.graphics.setColor(248 / 255, 218 / 255, 39 / 255)
   love.graphics.rectangle( "fill", xpos, P.player_list.y, w_h + 4 , w_h)
   resetColors()
 end
@@ -177,9 +175,6 @@ function Render.selectCards(cards, current_card)
       love.graphics.scale(s, s)
       local y = P.card_list.y / s
       local x = (P.card_list.x + (i - 1) * (P.card_list.margin)) / s
-
-      -- local x, y = P.card_list.x + (i - 1) * (P.card_list.margin), P.card_list.y
-
       cards[i].draw(x, y)
       love.graphics.pop()
       hover(x * s, y * s, Card.w , Card.h , getHoverColor(cards[i], current_card))
@@ -192,7 +187,6 @@ end
 function Render.gameEnd(cards_left)
   love.graphics.setFont(love.graphics.newFont(15))
   drawRect(P.endgame.bg)
-
   love.graphics.print(cards_left, P.endgame.text.x, P.endgame.text.y)
 end
 

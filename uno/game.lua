@@ -246,7 +246,7 @@ function Game.new(o)
           }
         }
       end,
-      input  = function()
+      input = function()
         return {
           fun = function () end,
           args = {},
@@ -254,7 +254,7 @@ function Game.new(o)
           restart = restart
         }
       end,
-      play   = function() end
+      play = function() end
     }
   }
 
@@ -282,7 +282,6 @@ function Game.new(o)
       _has_ended = true; love.event.quit()
       return
     end
-
     for i = 1, #_player_list do
       _player_list[i].dealCards(_deck, 7)
     end

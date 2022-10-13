@@ -10,7 +10,6 @@ function AI.getPlayableCards(cards, current_card)
   for i = 1, #cards do
     if Rules.checkNumber(cards[i], current_card) or
       Rules.checkColor(cards[i], current_card) then
-      -- table.insert(playable_indexes, cards[i])
       table.insert(playable_indexes, i)
     end
   end
@@ -51,7 +50,6 @@ function AI.chooseColor(cards, current_card)
       color_number[4] = color_number[4] + 1
     end
   end
-
   return table.max_key(color_number)
 end
 

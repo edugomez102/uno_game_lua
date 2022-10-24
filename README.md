@@ -10,7 +10,7 @@ Card images from https://en.wikipedia.org/wiki/Uno_(card_game)#/media/File:UNO_c
 
 ## Quick Guide
 
-1. go to `main.lua` and ad or delete players, change human to false if you want the player to be
+1. Go to `main.lua` and ad or delete players, change human to false if you want the player to be
 AI controlled.
 ```lua
 local players = {
@@ -20,15 +20,15 @@ local players = {
 }
 ```
 2. You can add 2 - 10 players.
-3. run CLI version or GUI version.
+3. Run CLI version or GUI version.
 
 ### CLI version
 
-checkout branch `cli_version` and run `lua main.lua`.
+Checkout branch `cli_version` and run `lua main.lua`.
 
 ### GUI version
 
-gui version is in master branch and uses [love2d](https://love2d.org/) library.
+Gui version is in master branch and uses [love2d](https://love2d.org/) library.
 Install love2d and then run `love .`.
 
 
@@ -41,4 +41,4 @@ effects on the game).
 ## TODOs
 
 - [ ] Use corutines for AI waiting in gui mode
-- [ ] improve UX I guess ?
+- [ ] Improve UX I guess ?
